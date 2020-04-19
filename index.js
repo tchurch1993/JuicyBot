@@ -44,6 +44,7 @@ bot.registry.registerGroup('voice', 'Voice');
 bot.registry.registerGroup('holiday', 'Holiday');
 bot.registry.registerGroup('testcommands', 'testCommands');
 bot.registry.registerGroup('video', 'Video')
+bot.registry.registerGroup('games', 'Games')
 bot.registry.registerDefaults();
 bot.registry.registerCommandsIn(__dirname + '/commands');
 
