@@ -1,0 +1,13 @@
+{
+  "token": "THIS_IS_WHERE_DISCORD_BOT_TOKEN_SHOULD_GO",
+  "prefix": "!",
+  "gyfcat" : {
+    "client_id" : "CLEINT_ID",
+    "client_secret" : "CLIENT_SECRET"
+},
+  "HolidayAPIKey" : "HOLIDAY_API_KEY",
+  "mp3Paths" : {
+    "test" : "PATH_TO_MP3",
+    "test2" : "PATH_TO_ANOTHER_MP3"
+  }
+}
