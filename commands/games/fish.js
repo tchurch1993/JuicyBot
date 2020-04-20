@@ -15,6 +15,7 @@ class FishCommand extends commando.Command {
   async run(message, args) {
     this.ValidateAndAddUser(message.member, function(user){
         console.log(user)
+        
         if(user){
             message.channel.sendMessage(user.get("UserId"));
         } else {
