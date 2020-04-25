@@ -14,7 +14,7 @@ const bot = new Commando.Client();
 
 const mongoose = require('mongoose');
 
-mongoose.connect(config.mongoDb)
+mongoose.connect(config.mongoDb, { useNewUrlParser: true, useUnifiedTopology: true })
 
 var db = mongoose.connection;
 
