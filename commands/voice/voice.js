@@ -2,10 +2,16 @@ const commando = require('discord.js-commando');
 const config = require("./../../config.json");
 
 function Play(connection, soundPath){
-    const dispatcher = connection.playFile(soundPath);
-    dispatcher.on("end", end => {
+    try {
+        const dispatcher = connection.play(soundPath);
+        dispatcher.on("finish", finish => {
+            connection.disconnect()
+        });
+    } catch (error) {
+        console.log(error)
         connection.disconnect()
-    });
+    }
+
 }
 
 
@@ -22,9 +28,9 @@ class VoiceCommand extends commando.Command {
     async run(message, args) {
         let soundPath = config.mp3Paths[args];
         if(soundPath != null){
-            if (message.member.voiceChannel) {
+            if (message.member.voice.channel) {
                 if (!message.guild.voiceConnection) {
-                    message.member.voiceChannel.join()
+                    message.member.voice.channel.join()
                         .then(connection => {
                             Play(connection, soundPath)
                         })

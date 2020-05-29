@@ -9,6 +9,7 @@ class FishCommand extends commando.Command {
       group: "games",
       memberName: "fish",
       description: "catch some fish!",
+      ownerOnly: true,
     });
   }
 

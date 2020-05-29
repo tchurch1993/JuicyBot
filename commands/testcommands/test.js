@@ -7,12 +7,13 @@ class TestCommand extends commando.Command {
             name: 'test',
             group: 'testcommands',
             memberName: 'test',
-            description: 'Just a testy test commandy command'
+            description: 'Just a testy test commandy command',
+            ownerOnly: true,
         })
     }
 
     async run(message, args){
-        if(message.author.id === '130873563317010433'){
+       
             // const { file } = await fetch('https://discordapp.com/api/channels/' + message.channel.id +'/pins')
             // .then(Response => Response.json())
             // .catch(console.log('error i guess'));
@@ -26,9 +27,6 @@ class TestCommand extends commando.Command {
                 console.error(err)
             })
             //message.channel.send(file);
-        } else {
-            message.channel.send("nah bruv, this just for the ol' juicy boi")
-        }
 
 }
 }

@@ -16,23 +16,21 @@ class MemeCommand extends commando.Command {
         var gfycat = new Gyfcat(config.gfycat);
 
         gfycat.authenticate((err, data) => {
-            console.log('token', gfycat.token);
             let options = {
                 search_text: args,
                 count: 50,
                 first: 1
             };
             gfycat.search(options).then(data => {
-                console.log(data.gfycats.length)
                 if(data.gfycats.length > 0){
                     if(args === ('furry' || 'furries')){
-                        message.channel.sendMessage("get out of here with that gay shit");
+                        message.channel.send("get out of here with that gay shit");
                         return;
                     }
                     var diceRoll = Math.floor(Math.random() * data.gfycats.length);
-                    message.channel.sendMessage(data.gfycats[diceRoll].max2mbGif.toString());
+                    message.channel.send(data.gfycats[diceRoll].max2mbGif.toString());
                 } else{
-                    message.channel.sendMessage("ain't no memes here kiddo")
+                    message.channel.send("ain't no memes here kiddo")
                 }
             });
             
