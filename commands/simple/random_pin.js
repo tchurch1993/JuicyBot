@@ -2,7 +2,7 @@ const commando = require('discord.js-commando');
 const discord = require('discord.js');
 
 function buildRichQuote(randoMessage){
-    var date = new Date()
+    var date = randoMessage[0].createdAt
     var year = date.getFullYear().toString();
      year = setCharAt(year, 1, 'K')
     var myInfo = new discord.MessageEmbed()
