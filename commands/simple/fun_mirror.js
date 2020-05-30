@@ -11,7 +11,7 @@ class FunMirrorCommand extends commando.Command {
     }
 
     async run(message, args){
-        message.reply(message.author.avatarURL);
+        message.reply(message.author.avatarURL());
     }
 }
 
