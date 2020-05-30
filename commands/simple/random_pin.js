@@ -5,10 +5,10 @@ function buildRichQuote(randoMessage){
     var date = new Date()
     var year = date.getFullYear().toString();
      year = setCharAt(year, 1, 'K')
-    var myInfo = new discord.RichEmbed()
+    var myInfo = new discord.MessageEmbed()
             .addField(randoMessage, "-" + randoMessage[0].author.username + " " + year)
             .setColor(0xFF0000)
-            .setThumbnail(randoMessage[0].author.avatarURL)
+            .setThumbnail(randoMessage[0].author.avatarURL())
     return myInfo;
 }
 
@@ -24,7 +24,7 @@ class RandomPinCommand extends commando.Command {
     }
 
     async run(message, args){
-        message.channel.fetchPinnedMessages()
+        message.channel.messages.fetchPinned()
             .then(messages => {
                 if(messages.size > 0){
                     var randoMessage = messages.random(1);

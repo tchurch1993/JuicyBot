@@ -20,7 +20,7 @@ class IPCommand extends commando.Command {
             http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp){
                 resp.on('data', function(ip){
                     console.log("My Public IP address is: " + ip);
-                    message.author.sendMessage("The IP is " + ip + ":25565").then(message => console.log('Sent message: ${message.content}'))
+                    message.author.send("The IP is " + ip + ":25565").then(message => console.log('Sent message: ${message.content}'))
                         .catch(console.error);
                 })
             })

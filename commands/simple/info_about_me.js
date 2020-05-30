@@ -12,12 +12,12 @@ class InfoAboutMeCommand extends commando.Command {
     }
 
     async run(message, args) {
-        var myInfo = new discord.RichEmbed()
+        var myInfo = new discord.MessageEmbed()
             .addField("About Me", "suck it")
             .setColor(0xFF0000)
             .setThumbnail(message.author.avatarURL)
             .setFooter("Thanks for reading. I hope you learned a little about me :D")
-        message.channel.sendEmbed(myInfo);
+        message.channel.send(myInfo);
     }
 }
 

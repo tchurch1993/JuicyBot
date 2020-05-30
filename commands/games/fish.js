@@ -18,9 +18,9 @@ class FishCommand extends commando.Command {
         console.log(user)
         
         if(user){
-            message.channel.sendMessage(user.get("UserId"));
+            message.channel.send(user.get("UserId"));
         } else {
-            message.channel.sendMessage("shit broke")
+            message.channel.send("shit broke")
         }
     });
     

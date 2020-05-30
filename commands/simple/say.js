@@ -11,7 +11,7 @@ class SayCommand extends commando.Command {
     }
 
     async run(message, args){
-        message.channel.sendMessage(args);
+        message.channel.send(args);
     }
 }
 
