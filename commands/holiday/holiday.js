@@ -9,7 +9,8 @@ class HolidayCommand extends commando.Command {
             name: 'holiday',
             group: 'holiday',
             memberName: 'holidayt',
-            description: 'displays what holiday is on that day'
+            description: 'displays what holiday is on that day',
+            ownerOnly: true,
         })
     }
 

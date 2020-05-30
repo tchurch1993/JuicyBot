@@ -3,6 +3,7 @@ const YTDL = require('ytdl-core');
 
 function Play(connection, message) {
     var server = servers[message.guild.id];
+    // This will probably need to change to connection.play()
     server.dipatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
     server.queue.shift();
     server.dipatcher.on("end", function(){
@@ -20,17 +21,18 @@ class JoinChannelCommand extends commando.Command {
             name: 'join',
             group: 'voice',
             memberName: 'join',
-            description: 'Joins the channel of the commander'
+            description: 'Joins the channel of the commander',
+            ownerOnly: true,
         })
     }
 
     async run(message, args){
-        if(message.member.voiceChannel){
+        if(message.member.voice.channel){
             if(!message.guild.voiceConnection){
                 if(!servers[message.guild.id]){
                     servers[message.guild.id] = {queue: []};
                 }
-                message.member.voiceChannel.join()
+                message.member.voice.channel.join()
                     .then(connection => {
                         var server = servers[message.guild.id];
                         message.reply("Successfully joined!");
