@@ -33,7 +33,7 @@
     "opusscript": "0.0.6",
     "pizzicato": "^0.6.4",
     "prism-media": "^1.2.2",
-    "puppeteer": "^3.0.0",
+    "puppeteer": "^3.3.0",
     "rebuild": "^0.1.2",
     "request": "^2.88.2",
     "sqlite": "^3.0.3",
