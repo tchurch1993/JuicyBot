@@ -3,27 +3,21 @@ const textToSpeech = require('@google-cloud/text-to-speech');
 const fs = require('fs');
 const util = require('util');
 const config = require("./../../config.json");
-process.env.GOOGLE_APPLICATION_CREDENTIALS = "E:\\Dev projects\\JuicyBot\\LinkDump-428fe5f385e2.json";
+process.env.GOOGLE_APPLICATION_CREDENTIALS = __dirname + "../../../LinkDump-428fe5f385e2.json";
 
 function Play(connection, soundPath) {
   try {
     const dispatcher = connection.play(fs.createReadStream(soundPath), { type: 'ogg/opus' });
     dispatcher.on("finish", (finish) => {
       connection.disconnect();
+      fs.unlinkSync(soundPath);
   });
   } catch (error) {
     console.log(error)
     connection.disconnect();
+    fs.unlinkSync(soundPath);
   }
   
-}
-
-function sleep(millisecondsToWait) {
-  var now = new Date().getTime();
-  while (new Date().getTime() < now + millisecondsToWait) {
-    /* do nothing; this will exit once it reaches the time limit */
-    /* if you want you could do something and exit */
-  }
 }
 
 async function getTextToSpeechPath(text) {
