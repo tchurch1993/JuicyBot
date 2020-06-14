@@ -21,6 +21,7 @@ client.registry
     ['simple', 'Simple'],
     ['gifs','Gifs'],
     ['voice','Voice'],
+    ['talk', 'Talk'],
     ['holiday','Holiday'],
     ['testcommands','TestCommands'],
     ['video','Video'],
@@ -51,12 +52,14 @@ client.on('error', console.error);
 
 client.on("guildCreate", guild => {
   // This event triggers when the bot joins a guild.
+  //TODO: add Guild to DB
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
 });
 
 client.on("guildDelete", guild => {
   // this event triggers when the bot is removed from a guild.
+  // TODO: Delete guild from DB
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
   client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
 });
