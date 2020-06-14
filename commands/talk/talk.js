@@ -26,10 +26,12 @@ async function getTextToSpeechPath(text, user) {
   const request = {
       input: {text: text},
       // Select the language and SSML voice gender (optional)
-      voice: {languageCode: user.get('TalkVoice'), ssmlGender: 'NEUTRAL'},
+      voice: {languageCode: user.get('TalkVoice'), ssmlGender: 'MALE'},
       // select the type of audio encoding
       audioConfig: {audioEncoding: 'OGG_OPUS'},
     };
+
+    console.log(user.get('TalkVoice'))
   
     // Performs the text-to-speech request
     const [response] = await client.synthesizeSpeech(request);
@@ -73,17 +75,6 @@ class TalkCommand extends commando.Command {
       } else {
         message.reply("You must be in a voice channel to summon me!");
       }
-
-
-
-      if(user){
-          message.channel.send(user.get("UserId"));
-      } else {
-          message.channel.send("shit broke")
-      }
-
-
-
   });
 
   }

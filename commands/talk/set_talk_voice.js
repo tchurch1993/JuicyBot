@@ -18,6 +18,7 @@ class SetTalkVoiceCommand extends commando.Command {
             ValidateAndAddUser(message.member, (user) => {
                 var voice = voiceList[args]
                 user.TalkVoice = voice
+                user.save();
                 message.channel.send(`Talk voice set to : ${args}`)
             })
         } else {
