@@ -14,7 +14,7 @@ class SetTalkVoiceCommand extends commando.Command {
 
     async run(message, args){
 
-        if(voiceList["indian"] != undefined){
+        if(voiceList[args] != undefined){
             ValidateAndAddUser(message.member, (user) => {
                 var voice = voiceList[args]
                 user.TalkVoice = voice
