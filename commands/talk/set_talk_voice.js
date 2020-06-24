@@ -8,7 +8,8 @@ class SetTalkVoiceCommand extends commando.Command {
             name: 'setvoice',
             group: 'talk',
             memberName: 'setvoice',
-            description: 'sets the voice for the talk command'
+            description: 'sets the voice for the talk command',
+            guildOnly: true,
         })
     }
 

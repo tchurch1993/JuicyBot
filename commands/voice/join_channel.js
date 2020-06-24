@@ -23,6 +23,7 @@ class JoinChannelCommand extends commando.Command {
             memberName: 'join',
             description: 'Joins the channel of the commander',
             ownerOnly: true,
+            guildOnly: true,
         })
     }
 

@@ -52,6 +52,7 @@ class TalkCommand extends commando.Command {
       group: "talk",
       memberName: "talk",
       description: "play sound in voice channel based on parameters",
+      guildOnly: true,
     });
   }
   

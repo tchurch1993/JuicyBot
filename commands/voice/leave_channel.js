@@ -6,7 +6,8 @@ class LeaveChannelCommand extends commando.Command {
             name: 'leave',
             group: 'voice',
             memberName: 'leave',
-            description: 'leaves the channel of the commander'
+            description: 'leaves the channel of the commander',
+            guildOnly: true,
         })
     }
 

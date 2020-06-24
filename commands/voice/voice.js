@@ -21,7 +21,8 @@ class VoiceCommand extends commando.Command {
             name: 'voice',
             group: 'voice',
             memberName: 'voice',
-            description: 'play sound in voice channel based on parameters'
+            description: 'play sound in voice channel based on parameters',
+            guildOnly: true,
         })
     }
 
