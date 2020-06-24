@@ -24,9 +24,6 @@ class FishCommand extends commando.Command {
             message.channel.send("shit broke")
         }
     });
-    
-    
-
   }
 }
 
