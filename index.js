@@ -26,6 +26,7 @@ client.registry
     ['testcommands','TestCommands'],
     ['video','Video'],
     ['games','Games'],
+    ['funny','Funny'],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands()
@@ -45,7 +46,7 @@ db.once('open', function(){
 
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}! (${client.user.id})`)
-  client.user.setActivity(`Serving ${client.guilds.cache.size} server`)
+  client.user.setActivity(`Serving ${client.guilds.cache.size} servers`)
 })
 
 client.on('error', console.error);
