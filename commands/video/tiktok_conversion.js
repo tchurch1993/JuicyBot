@@ -40,11 +40,11 @@ class TokCommand extends commando.Command {
         })
         .then(async function (pupObject) {
           var html = await pupObject.html
-          var videoElement = JSON.parse($("#videoObject", html).contents().toString())
-          if(videoElement.contentUrl == undefined){
+          var videoElement = JSON.parse($("#__NEXT_DATA__", html).contents().toString())
+          if(videoElement.props.pageProps.videoData.itemInfos.video.urls[0] == undefined){
             return
           }
-          var videoUrl = videoElement.contentUrl;
+          var videoUrl = videoElement.props.pageProps.videoData.itemInfos.video.urls[0];
 
           request(videoUrl)
             .pipe(fs.createWriteStream(filename))
@@ -52,7 +52,6 @@ class TokCommand extends commando.Command {
               const attachment = new MessageAttachment(filename);
               message.channel.send(attachment).then(function () {
                 fs.unlinkSync(filename);
-                console.log('done');
                 pupObject.browser.close();
               });
             });
