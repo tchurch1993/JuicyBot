@@ -1,5 +1,5 @@
 const commando = require("discord.js-commando");
-const { Attachment } = require("discord.js");
+const { MessageAttachment } = require("discord.js");
 const fs = require("fs");
 const $ = require("cheerio");
 const puppeteer = require("puppeteer");
@@ -34,21 +34,27 @@ class TokCommand extends commando.Command {
         })
         .then(async function (page) {
           await page.goto(args);
-          return page.content();
+          var html = page.content();
+          var pupObject = {html: html, browser: page.browser()}
+          return pupObject;
         })
-        .then(function (html) {
-          var videoUrl = $("video", html)[0].attribs.src;
+        .then(async function (pupObject) {
+          var html = await pupObject.html
+          var videoElement = JSON.parse($("#__NEXT_DATA__", html).contents().toString())
+          if(videoElement.props.pageProps.videoData.itemInfos.video.urls[0] == undefined){
+            return
+          }
+          var videoUrl = videoElement.props.pageProps.videoData.itemInfos.video.urls[0];
 
           request(videoUrl)
             .pipe(fs.createWriteStream(filename))
             .on("close", function () {
-              const attachment = new Attachment(filename);
+              const attachment = new MessageAttachment(filename);
               message.channel.send(attachment).then(function () {
                 fs.unlinkSync(filename);
+                pupObject.browser.close();
               });
-              console.log("done");
             });
-          //console.log($('video', html));
         })
         .catch(function (err) {
           console.log(err);

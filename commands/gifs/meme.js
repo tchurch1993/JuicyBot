@@ -18,7 +18,7 @@ class MemeCommand extends commando.Command {
         gfycat.authenticate((err, data) => {
             let options = {
                 search_text: args,
-                count: 50,
+                count: 5,
                 first: 1
             };
             gfycat.search(options).then(data => {
