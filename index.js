@@ -27,6 +27,7 @@ client.registry
     ['video','Video'],
     ['games','Games'],
     ['funny','Funny'],
+    ['music','Music'],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands()
@@ -46,7 +47,7 @@ db.once('open', function(){
 
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}! (${client.user.id})`)
-  client.user.setActivity(`Serving ${client.guilds.cache.size} servers`)
+  client.user.setActivity(`Serving ${client.guilds.cache.size} juicy servers`)
 })
 
 client.on('error', console.error);
@@ -55,14 +56,14 @@ client.on("guildCreate", guild => {
   // This event triggers when the bot joins a guild.
   //TODO: add Guild to DB
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
+  client.user.setActivity(`Serving ${client.guilds.cache.size} juicy servers`);
 });
 
 client.on("guildDelete", guild => {
   // this event triggers when the bot is removed from a guild.
   // TODO: Delete guild from DB
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  client.user.setActivity(`Serving ${client.guilds.cache.size} servers`);
+  client.user.setActivity(`Serving ${client.guilds.cache.size} juicy servers`);
 });
 
 
