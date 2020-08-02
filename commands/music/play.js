@@ -1,4 +1,5 @@
 const commando = require('discord.js-commando');
+const ytdl = require('ytdl-core');
 
 class PlayCommand extends commando.Command {
     constructor(bot){

@@ -1,5 +1,5 @@
 const commando = require('discord.js-commando');
-const voiceList = require('../../helpers/googleTTSVoiceList');
+const voiceList = require('../../helpers/talk/googleTTSVoiceList');
 const ValidateAndAddUser = require('../../database/helpers/userValidation')
 
 class SetTalkVoiceCommand extends commando.Command {

@@ -1,4 +1,4 @@
-module.exports  = {
+export default {
     "indian": "en-IN",
     "english": "en-GB",
     "american": "en-US",
