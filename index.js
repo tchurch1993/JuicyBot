@@ -74,7 +74,7 @@ client.on('disconnect', (event) => {
 });
 
 global.currentTeamMembers = [];
-global.queue = new map();
+global.queue = new Map();
 global.servers = {};
 
 

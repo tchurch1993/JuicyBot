@@ -16,4 +16,4 @@ class VoiceListCommand extends commando.Command {
     }
 }
 
-module.exports = SayCommand;
+module.exports = VoiceListCommand;

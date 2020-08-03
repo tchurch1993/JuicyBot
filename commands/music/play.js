@@ -13,7 +13,13 @@ class PlayCommand extends commando.Command {
     }
 
     async run(message, args){
-        message.channel.send(args);
+        try {
+            let songInfo = await ytdl.getInfo(args);
+            console.log(songInfo);
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 }
 
