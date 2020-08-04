@@ -1,5 +1,5 @@
 const commando = require('discord.js-commando');
-const voiceList = require('../../helpers/talk/googleTTSVoiceList');
+const config = require('../../config.json');
 const ValidateAndAddUser = require('../../database/helpers/userValidation')
 
 class SetTalkVoiceCommand extends commando.Command {
@@ -15,9 +15,9 @@ class SetTalkVoiceCommand extends commando.Command {
 
     async run(message, args){
 
-        if(voiceList[args] != undefined){
+        if(config.voicelist[args] != undefined){
             ValidateAndAddUser(message.member, (user) => {
-                var voice = voiceList[args]
+                var voice = config.voicelist[args]
                 user.TalkVoice = voice
                 user.save();
                 message.channel.send(`Talk voice set to : ${args}`)

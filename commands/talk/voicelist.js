@@ -1,5 +1,5 @@
 const commando = require('discord.js-commando');
-const voicelist = require('../../helpers/talk/googleTTSVoiceList')
+const config = require('../../config.json')
 
 class VoiceListCommand extends commando.Command {
     constructor(bot){
@@ -12,7 +12,13 @@ class VoiceListCommand extends commando.Command {
     }
 
     async run(message, args){
-        message.channel.send(JSON.stringify(voicelist));
+        var voiceListString = ""
+        var number = 1
+        for(var voice in config.voicelist){
+            voiceListString += number + '. ' + voice + "\n";
+            number++;
+        }
+        message.channel.send(voiceListString);
     }
 }
 
