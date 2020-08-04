@@ -16,5 +16,11 @@
   "giphySDK": {
     "API_KEY": "API_KEY",
     "url": "API_URL"
+  },
+  "voicelist": {
+      "indian": "en-IN",
+      "english": "en-GB",
+      "american": "en-US",
+      "australian": "en-AU"
   }
 }
