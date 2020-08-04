@@ -58,9 +58,13 @@ class TalkCommand extends commando.Command {
   
   
   async run(message, args) {
-    ValidateAndAddUser(message.member, async function(user){
-      console.log(user)
 
+    let serverQueue = global.queue.get(message.guild.id);
+    if(serverQueue && serverQueue.songs.length > 0){
+      return message.channel.send("already shit playing bruh: " + serverQueue.songs[0].title)
+    }
+
+    ValidateAndAddUser(message.member, async function(user){
 
 
       var soundPath = await getTextToSpeechPath(args, user);

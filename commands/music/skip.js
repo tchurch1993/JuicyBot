@@ -6,7 +6,8 @@ class SkipCommand extends commando.Command {
             name: 'skip',
             group: 'music',
             memberName: 'skip',
-            description: 'skips the current song'
+            description: 'skips the current song',
+            guildOnly: true,
         })
     }
 

@@ -7,8 +7,8 @@ class PlayCommand extends commando.Command {
             name: 'play',
             group: 'music',
             memberName: 'play',
-            description: 'plays music!',
-            ownerOnly: true
+            description: 'plays music from a youtube link!',
+            guildOnly: true,
         })
     }
 
@@ -25,7 +25,12 @@ class PlayCommand extends commando.Command {
                 return message.channel.send("I ain't got permissions to join and/or speak, yo")
             }
 
-            const songInfo = await ytdl.getInfo(args);
+            let argArray = args.split(' ');
+
+            if(!this.validURL(argArray[0])){
+                return message.channel.send("yo, this aint no URL. wtf man");
+            }
+            const songInfo = await ytdl.getInfo(argArray[0]);
             const song = {
                 title: songInfo.title,
                 url: songInfo.video_url
@@ -81,6 +86,16 @@ class PlayCommand extends commando.Command {
         dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
         serverQueue.textChannel.send(`Start playing: **${song.title}**`);
       }
+
+      validURL(str) {
+		let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+		  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+		  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+		  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+		  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+		  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+		return !!pattern.test(str);
+	}
 }
 
 module.exports = PlayCommand;
