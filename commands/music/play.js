@@ -32,8 +32,8 @@ class PlayCommand extends commando.Command {
             }
             const songInfo = await ytdl.getInfo(argArray[0]);
             const song = {
-                title: songInfo.title,
-                url: songInfo.video_url
+                title: songInfo.videoDetails.title,
+                url: songInfo.videoDetails.video_url
             };
 
             if (!serverQueue) {

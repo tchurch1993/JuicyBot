@@ -39,7 +39,7 @@
     "sqlite": "^3.0.3",
     "utf-8-validate": "^5.0.2",
     "uws": "^9.148.0",
-    "ytdl-core": "^0.29.7"
+    "ytdl-core": "^3.2.0"
   },
   "repository": {
     "type": "git",
