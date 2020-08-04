@@ -27,6 +27,10 @@ class VoiceCommand extends commando.Command {
     }
 
     async run(message, args) {
+        let serverQueue = global.queue.get(message.guild.id);
+        if(serverQueue && serverQueue.songs > 0){
+          return message.channel.send("already shit playing bruh: " + serverQueue.songs[0].title)
+        }
         let soundPath = config.mp3Paths[args];
         if(soundPath != null){
             if (message.member.voice.channel) {

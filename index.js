@@ -11,7 +11,7 @@ const config = require("./config.json");
 // some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
 // this is what we're refering to. Your client.
 const client = new CommandoClient({
-  commandPrefix: '!',
+  commandPrefix: config.prefix,
   owner: '130873563317010433'
 })
 
@@ -34,6 +34,7 @@ client.registry
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
 const mongoose = require('mongoose');
+const { map } = require('jquery');
 
 mongoose.connect(config.mongoDb, { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -73,6 +74,7 @@ client.on('disconnect', (event) => {
 });
 
 global.currentTeamMembers = [];
+global.queue = new Map();
 global.servers = {};
 
 

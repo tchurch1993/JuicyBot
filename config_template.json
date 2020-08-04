@@ -4,10 +4,23 @@
   "gyfcat" : {
     "client_id" : "CLEINT_ID",
     "client_secret" : "CLIENT_SECRET"
-},
+  },
   "HolidayAPIKey" : "HOLIDAY_API_KEY",
   "mp3Paths" : {
     "test" : "PATH_TO_MP3",
     "test2" : "PATH_TO_ANOTHER_MP3"
+  },
+  "whiteList": ["USER_ID_1",
+    "USER_ID_2"],
+  "mongoDb": "MONGODB_PATH",
+  "giphySDK": {
+    "API_KEY": "API_KEY",
+    "url": "API_URL"
+  },
+  "voicelist": {
+      "indian": "en-IN",
+      "english": "en-GB",
+      "american": "en-US",
+      "australian": "en-AU"
   }
 }

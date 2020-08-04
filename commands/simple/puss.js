@@ -12,8 +12,14 @@ class PussCommand extends commando.Command {
     }
 
     async run(message, args){
-        const { file } = await fetch('https://aws.random.cat/meow').then(Response => Response.json());
-        message.channel.send(file);
+        try {
+            const { file } = await fetch('https://aws.random.cat/meow').then(Response => Response.json());
+            message.channel.send(file);
+        } catch (error) {
+            console.error(error)
+            message.channel.send("sorry bruv, you get no puss")
+        }
+
     }
 }
 
