@@ -1,6 +1,7 @@
 // Load up the discord.js library
 const path = require('path')
-const { CommandoClient } = require("discord.js-commando");
+const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
+const sqlite = require('sqlite');
 const tok = require('./helpers/commandless/tok')
 // Here we load the config.json file that contains our token and our prefix values. 
 
@@ -15,6 +16,10 @@ const client = new CommandoClient({
   commandPrefix: config.prefix,
   owner: '130873563317010433'
 })
+
+sqlite.open(path.join(__dirname, "settings.sqlite3")).then((db) => {
+  client.setProvider(new SQLiteProvider(db));
+});
 
 client.registry
   .registerDefaultTypes()

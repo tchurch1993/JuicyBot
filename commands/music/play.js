@@ -87,7 +87,7 @@ class PlayCommand extends commando.Command {
         serverQueue.textChannel.send(`Start playing: **${song.title}**`);
       }
 
-      validURL(str) {
+    validURL(str) {
 		let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
 		  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
 		  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
