@@ -1,6 +1,7 @@
 // Load up the discord.js library
 const path = require('path')
 const { CommandoClient } = require("discord.js-commando");
+const tok = require('./helpers/commandless/tok')
 // Here we load the config.json file that contains our token and our prefix values. 
 
 // config.token contains the bot's token
@@ -34,7 +35,6 @@ client.registry
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
 const mongoose = require('mongoose');
-const { map } = require('jquery');
 
 mongoose.connect(config.mongoDb, { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -71,6 +71,10 @@ client.on("guildDelete", guild => {
 client.on('disconnect', (event) => {
     console.log(event);
     client.login(config.token)
+});
+
+client.on('message', async message => {
+    tok(message, client)
 });
 
 global.currentTeamMembers = [];
