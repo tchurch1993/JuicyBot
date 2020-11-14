@@ -77,13 +77,13 @@ class PlayCommand extends commando.Command {
         }
       
         const dispatcher = serverQueue.connection
-          .play(ytdl(song.url))
+          .play(ytdl(song.url, { highWaterMark: 1 << 25 }))
           .on("finish", () => {
             serverQueue.songs.shift();
             this.play(guild, serverQueue.songs[0]);
           })
           .on("error", error => console.error(error));
-        dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+        dispatcher.setVolumeLogarithmic(serverQueue.volume);
         serverQueue.textChannel.send(`Start playing: **${song.title}**`);
       }
 

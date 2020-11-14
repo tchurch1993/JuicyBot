@@ -1,0 +1,28 @@
+const commando = require('discord.js-commando');
+
+class PokeCommand extends commando.Command {
+    constructor(bot){
+        super(bot,{
+            name: 'poke',
+            group: 'games',
+            memberName: 'poke',
+            description: 'poke your friends!',
+            ownerOnly: true
+        })
+    }
+
+    async run(message, args){
+        var poker = message.author;
+        var pokee = message.mentions.users.first();
+
+        var pokerAvatarURL = poker.avatarURL();
+        var pokeeAvatarURL = pokee.avatarURL();
+
+        console.log(`poker: ${pokerAvatarURL}`)
+        console.log(`pokee: ${pokeeAvatarURL}`)
+
+        message.channel.send(pokeeAvatarURL);
+    }
+}
+
+module.exports = PokeCommand;

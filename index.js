@@ -1,6 +1,9 @@
 // Load up the discord.js library
 const path = require('path')
-const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
+const {
+  CommandoClient,
+  SQLiteProvider
+} = require('discord.js-commando');
 const sqlite = require('sqlite');
 const tok = require('./helpers/commandless/tok')
 // Here we load the config.json file that contains our token and our prefix values. 
@@ -25,15 +28,15 @@ client.registry
   .registerDefaultTypes()
   .registerGroups([
     ['simple', 'Simple'],
-    ['gifs','Gifs'],
-    ['voice','Voice'],
+    ['gifs', 'Gifs'],
+    ['voice', 'Voice'],
     ['talk', 'Talk'],
-    ['holiday','Holiday'],
-    ['testcommands','TestCommands'],
-    ['video','Video'],
-    ['games','Games'],
-    ['funny','Funny'],
-    ['music','Music'],
+    ['holiday', 'Holiday'],
+    ['testcommands', 'TestCommands'],
+    ['video', 'Video'],
+    ['games', 'Games'],
+    ['funny', 'Funny'],
+    ['music', 'Music'],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands()
@@ -41,13 +44,16 @@ client.registry
 
 const mongoose = require('mongoose');
 
-mongoose.connect(config.mongoDb, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.mongoDb, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
-db.once('open', function(){
+db.once('open', function () {
   console.log("db connected: " + db.name)
 })
 
@@ -74,13 +80,16 @@ client.on("guildDelete", guild => {
 
 
 client.on('disconnect', (event) => {
-    console.log(event);
-    client.login(config.token)
+  console.log(event);
+  client.login(config.token)
 });
 
-client.on('message', async message => {
+if (config.tokEnabled) {
+  client.on('message', async message => {
     tok(message, client)
-});
+  });
+}
+
 
 global.currentTeamMembers = [];
 global.queue = new Map();
@@ -89,15 +98,15 @@ global.servers = {};
 
 // bot.on("message", async message => {
 //   // This event will run on every single message received, from any channel or DM.
-  
+
 //   // It's good practice to ignore other bots. This also makes your bot ignore itself
 //   // and not get into a spam loop (we call that "botception").
 //   if(message.author.bot) return;
-  
+
 //   // Also good practice to ignore any message that does not start with our prefix, 
 //   // which is set in the configuration file.
 //   if(message.content.indexOf(config.prefix) !== 0) return;
-  
+
 //   // Here we separate our "command" name, and our "arguments" for the command. 
 //   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
 //   // command = say

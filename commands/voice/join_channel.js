@@ -30,17 +30,7 @@ class JoinChannelCommand extends commando.Command {
     async run(message, args){
         if(message.member.voice.channel){
             if(!message.guild.voiceConnection){
-                if(!servers[message.guild.id]){
-                    servers[message.guild.id] = {queue: []};
-                }
-                message.member.voice.channel.join()
-                    .then(connection => {
-                        var server = servers[message.guild.id];
-                        message.reply("Successfully joined!");
-                        console.log('args: ', args);
-                        server.queue.push(args);
-                        Play(connection, message);
-                    });
+                message.member.voice.channel.join();
             }
         } else {
             message.reply("You must be in a voice channel to summon me!");
