@@ -6,7 +6,8 @@ class VolumeCommand extends commando.Command {
             name: 'volume',
             group: 'music',
             memberName: 'volume',
-            description: 'changes the volume from 1-100'
+            description: 'changes the volume from 1-100',
+            ownerOnly: true
         })
     }
 
@@ -16,6 +17,7 @@ class VolumeCommand extends commando.Command {
 
         if(serverQueue){
             if(this.isNumber(args) && (args >= 1 && args <= 100)){
+                
                 message.channel.send(args);
             } else {
                 message.channel.send("please use a number between 1-100\ncurrent volume: " + serverQueue.volume)

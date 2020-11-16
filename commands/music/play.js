@@ -45,10 +45,11 @@ class PlayCommand extends commando.Command {
                   volume: 5,
                   playing: true
                 };
-            
+
+                queueContruct.songs.push(song);
                 global.queue.set(message.guild.id, queueContruct);
             
-                queueContruct.songs.push(song);
+
             
                 try {
                   var connection = await voiceChannel.join();
