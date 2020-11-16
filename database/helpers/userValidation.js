@@ -1,6 +1,6 @@
 const UserModel = require('../models/UserModel');
 
-module.exports = function  ValidateAndAddUser(member, callback) {
+module.exports = function ValidateAndAddUser(member, callback) {
     try {
         UserModel.findOne()
           .where("GuildId").equals(member.guild.id)

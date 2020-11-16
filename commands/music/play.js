@@ -32,8 +32,8 @@ class PlayCommand extends commando.Command {
             }
             const songInfo = await ytdl.getInfo(argArray[0]);
             const song = {
-                title: songInfo.title,
-                url: songInfo.video_url
+                title: songInfo.videoDetails.title,
+                url: songInfo.videoDetails.video_url
             };
 
             if (!serverQueue) {
@@ -45,10 +45,11 @@ class PlayCommand extends commando.Command {
                   volume: 5,
                   playing: true
                 };
-            
+
+                queueContruct.songs.push(song);
                 global.queue.set(message.guild.id, queueContruct);
             
-                queueContruct.songs.push(song);
+
             
                 try {
                   var connection = await voiceChannel.join();
@@ -77,17 +78,17 @@ class PlayCommand extends commando.Command {
         }
       
         const dispatcher = serverQueue.connection
-          .play(ytdl(song.url))
+          .play(ytdl(song.url, { highWaterMark: 1 << 25 }))
           .on("finish", () => {
             serverQueue.songs.shift();
             this.play(guild, serverQueue.songs[0]);
           })
           .on("error", error => console.error(error));
-        dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+        dispatcher.setVolumeLogarithmic(serverQueue.volume);
         serverQueue.textChannel.send(`Start playing: **${song.title}**`);
       }
 
-      validURL(str) {
+    validURL(str) {
 		let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
 		  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
 		  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address

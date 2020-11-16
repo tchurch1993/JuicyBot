@@ -18,6 +18,7 @@ class ClearCommand extends commando.Command {
             return message.channel.send("no queue to clear bruv")
 
         serverQueue.songs = [];
+        serverQueue.connection.dispatcher.end();
 
         message.channel.send("song list cleared my dude")
         } catch (error) {

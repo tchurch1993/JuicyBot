@@ -12,11 +12,12 @@ class LeaveChannelCommand extends commando.Command {
     }
 
     async run(message, args) {
-        if (message.guild.voiceConnection) {
-            message.guild.voiceConnection.disconnect();
-        } else {
-            message.reply("I am not in a voice channel to leave!");
+        try {
+            message.member.voice.channel.leave();
+        } catch (err) {
+            console.log(err);
         }
+        
     }
 }
 
