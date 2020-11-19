@@ -37,6 +37,7 @@
     "rebuild": "^0.1.2",
     "request": "^2.88.2",
     "sqlite": "^3.0.6",
+    "sqlite3": "^5.0.0",
     "tiktok-scraper": "^1.4.3",
     "utf-8-validate": "^5.0.3",
     "uws": "^9.148.0",

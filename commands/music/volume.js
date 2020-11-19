@@ -1,4 +1,5 @@
 const commando = require('discord.js-commando');
+const GuildVolume = require('../../database/helpers/guildVolume');
 
 class VolumeCommand extends commando.Command {
     constructor(bot){
@@ -12,13 +13,30 @@ class VolumeCommand extends commando.Command {
     }
 
     async run(message, args){
-        let serverQueue = global.queue.get(message.guild.id)
+        let guildId = message.guild.id;
+        let serverQueue = global.queue.get(guildId)
 
 
         if(serverQueue){
             if(this.isNumber(args) && (args >= 1 && args <= 100)){
+
+
+                if(serverQueue.connection){
+
+                    let connection = serverQueue.connection;
+                    let dispatcher = connection.dispatcher;
+
+                    GuildVolume.UpdateVolume(guildId, args, (guild) => {
+                        serverQueue.volume = guild.Volume;
+                        dispatcher.setVolumeLogarithmic(guild.Volume / 100);
+                        //TODO: pretty up volume message
+                        message.channel.send("volume set to: " + guild.Volume);
+                    });
+                    
                 
-                message.channel.send(args);
+
+                }
+
             } else {
                 message.channel.send("please use a number between 1-100\ncurrent volume: " + serverQueue.volume)
             }
@@ -26,7 +44,14 @@ class VolumeCommand extends commando.Command {
             message.channel.send("no song playing");
         }
         
-
+        //    {
+        //     textChannel: message.channel,
+        //     voiceChannel: voiceChannel,
+        //     connection: null,
+        //     songs: [],
+        //     volume: 5,
+        //     playing: true
+        //   };
         
     }
 
@@ -38,6 +63,8 @@ class VolumeCommand extends commando.Command {
         }
         return true;
     }
+
+
 }
 
 module.exports = VolumeCommand;

@@ -1,5 +1,6 @@
 const commando = require('discord.js-commando');
 const ytdl = require('ytdl-core');
+const GuildVolume = require('../../database/helpers/guildVolume')
 
 class PlayCommand extends commando.Command {
     constructor(bot){
@@ -16,6 +17,9 @@ class PlayCommand extends commando.Command {
         try {
             let serverQueue = global.queue.get(message.guild.id)
             const voiceChannel = message.member.voice.channel
+
+
+
             if(!voiceChannel){
                 return message.channel.send("You ain't in no voice channel, yo")
             }
@@ -37,12 +41,14 @@ class PlayCommand extends commando.Command {
             };
 
             if (!serverQueue) {
+                let guildVolume = await GuildVolume.GetVolume(message.guild.id);
+
                 const queueContruct = {
                   textChannel: message.channel,
                   voiceChannel: voiceChannel,
                   connection: null,
                   songs: [],
-                  volume: 5,
+                  volume: guildVolume,
                   playing: true
                 };
 
@@ -84,7 +90,8 @@ class PlayCommand extends commando.Command {
             this.play(guild, serverQueue.songs[0]);
           })
           .on("error", error => console.error(error));
-        dispatcher.setVolumeLogarithmic(serverQueue.volume);
+
+        dispatcher.setVolumeLogarithmic(serverQueue.volume / 100);
         serverQueue.textChannel.send(`Start playing: **${song.title}**`);
       }
 
