@@ -20,6 +20,26 @@ class RecordCommand extends commando.Command {
     }
 
     async run(message, args) {
+        let serverQueue = global.queue.get(message.guild.id)
+        const voiceChannel = message.member.voice.channel
+
+
+
+        if (!voiceChannel) {
+            return message.channel.send("You ain't in no voice channel broski");
+        }
+
+        const permissions = voiceChannel.permissionsFor(message.client.user);
+
+        if (!permissions.has("CONNECT")) {
+            return message.channel.send("I ain't got permissions to join bruh");
+        }
+
+        if(serverQueue && serverQueue.songs > 0){
+            return message.channel.send("Cannot record as I am already doing shit in the voice channel.");
+        }
+
+
         hasLeft = false;
         try {
 

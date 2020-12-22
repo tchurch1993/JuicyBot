@@ -30,7 +30,7 @@ async function Play(connection, soundPath) {
   
 }
 
-
+// TODO: make the sound file not be saved to disk
 async function getTextToSpeechPath(text, user) {
   const client = new textToSpeech.TextToSpeechClient();
   const request = {

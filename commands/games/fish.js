@@ -14,14 +14,16 @@ class FishCommand extends commando.Command {
     });
   }
 
+  //TODO: delete fish command because i probably wont flesh this out
   async run(message, args) {
     ValidateAndAddUser(message.member, function(user){
+      
         console.log(user)
         
         if(user){
             message.channel.send(user.get("UserId"));
         } else {
-            message.channel.send("shit broke")
+            message.channel.send("shit broke");
         }
     });
   }

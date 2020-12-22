@@ -17,6 +17,7 @@ class TokCommand extends commando.Command {
     });
   }
 
+  //TODO: make it so it does not save a file and just pipes the file through memory
   async run(message, args) {
     if (!args.includes("tiktok")) {
       message.channel.send("yo, this aint no tok");

@@ -11,6 +11,7 @@ class PokeCommand extends commando.Command {
         })
     }
 
+    //TODO: flesh out the idea or delete entirely
     async run(message, args){
         var poker = message.author;
         var pokee = message.mentions.users.first();

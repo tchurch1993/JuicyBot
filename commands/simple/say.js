@@ -10,6 +10,7 @@ class SayCommand extends commando.Command {
         })
     }
 
+    //TODO: delete from bot but keep as a template for future commands
     async run(message, args){
         message.channel.send(args);
     }
