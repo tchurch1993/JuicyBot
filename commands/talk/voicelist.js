@@ -11,6 +11,7 @@ class VoiceListCommand extends commando.Command {
         })
     }
 
+    //TODO: change name of command and how it lists out the sounds
     async run(message, args){
         var voiceListString = ""
         var number = 1

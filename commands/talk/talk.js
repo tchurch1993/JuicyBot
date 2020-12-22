@@ -3,24 +3,34 @@ const textToSpeech = require('@google-cloud/text-to-speech');
 const fs = require('fs');
 const util = require('util');
 const config = require("../../config.json");
-const ValidateAndAddUser = require("../../database/helpers/userValidation") 
+const ValidateAndAddUser = require("../../database/helpers/userValidation"); 
+const { resolve } = require("path");
 process.env.GOOGLE_APPLICATION_CREDENTIALS = __dirname + "../../../LinkDump-428fe5f385e2.json";
 
-function Play(connection, soundPath) {
+async function Play(connection, soundPath) {
   try {
     const dispatcher = connection.play(fs.createReadStream(soundPath), { type: 'ogg/opus' });
     dispatcher.on("finish", (finish) => {
+      try {
+        if(fs.existsSync(soundPath)){
+          fs.unlinkSync(soundPath);
+        }
+        
+      } catch (error) {
+        console.error(error);
+      }
       connection.disconnect();
-      fs.unlinkSync(soundPath);
-  });
+    });
+    fs.unlinkSync(soundPath);
+
   } catch (error) {
-    console.log(error)
     connection.disconnect();
     fs.unlinkSync(soundPath);
   }
   
 }
 
+// TODO: make the sound file not be saved to disk
 async function getTextToSpeechPath(text, user) {
   const client = new textToSpeech.TextToSpeechClient();
   const request = {
@@ -64,23 +74,32 @@ class TalkCommand extends commando.Command {
       return message.channel.send("already shit playing bruh: " + serverQueue.songs[0].title)
     }
 
-    ValidateAndAddUser(message.member, async function(user){
+    try {
+      ValidateAndAddUser(message.member, async function(user){
 
 
-      var soundPath = await getTextToSpeechPath(args, user);
-      if (message.member.voice.channel) {
-        if (!message.guild.voiceConnection) {
-          message.member.voice.channel
-            .join()
-            .then((connection) => {
-              Play(connection, soundPath);
-            })
-            .catch(console.error);
+        var soundPath = await getTextToSpeechPath(args, user);
+        if (message.member.voice.channel) {
+          if (!message.guild.voiceConnection) {
+            message.member.voice.channel
+              .join()
+              .then((connection) => {
+                Play(connection, soundPath);
+              })
+              .catch(console.error);
+          }
+        } else {
+          message.reply("You must be in a voice channel to summon me!");
         }
-      } else {
-        message.reply("You must be in a voice channel to summon me!");
+    });
+    } catch (err) {
+      try {
+        message.member.voice.channel.leave();
+      } catch (error) {
+        console.error(error);
       }
-  });
+    }
+    
 
   }
 

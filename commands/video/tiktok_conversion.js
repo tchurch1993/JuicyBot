@@ -5,6 +5,8 @@ const $ = require("cheerio");
 const puppeteer = require("puppeteer");
 const request = require("request");
 
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
 class TokCommand extends commando.Command {
   constructor(bot) {
     super(bot, {
@@ -15,6 +17,7 @@ class TokCommand extends commando.Command {
     });
   }
 
+  //TODO: make it so it does not save a file and just pipes the file through memory
   async run(message, args) {
     if (!args.includes("tiktok")) {
       message.channel.send("yo, this aint no tok");
@@ -23,9 +26,6 @@ class TokCommand extends commando.Command {
     try {
       const date = new Date();
       const filename = date.getTime() + ".mp4";
-      // var doc = new jsdom.JSDOM(this.httpGet(args))
-      // var doc = jsdom.implementation.createDocument(args)
-      var url;
 
       puppeteer
         .launch()
@@ -33,33 +33,31 @@ class TokCommand extends commando.Command {
           return browser.newPage();
         })
         .then(async function (page) {
-          await page.goto(args);
-          var html = page.content();
-          var pupObject = {html: html, browser: page.browser()}
+          await page.goto("https://ttdownloader.com/?url=" + args);
+          await delay(10000);
+          var html = await page.content();
+          var pupObject = { html: html, browser: page.browser() };
           return pupObject;
         })
         .then(async function (pupObject) {
-          var html = await pupObject.html
-          var videoElement = JSON.parse($("#__NEXT_DATA__", html).contents().toString())
-          if(videoElement.props.pageProps.videoData.itemInfos.video.urls[0] == undefined){
-            return
-          }
-          var videoUrl = videoElement.props.pageProps.videoData.itemInfos.video.urls[0];
+          var html = pupObject.html;
+          var videoElement = $("a.download-link", html);
 
-          request(videoUrl)
-            .pipe(fs.createWriteStream(filename))
-            .on("close", function () {
-              const attachment = new MessageAttachment(filename);
-              message.channel.send(attachment).then(function () {
-                fs.unlinkSync(filename);
-                pupObject.browser.close();
+          if (videoElement) {
+            var videoLink = videoElement[0].attribs.href;
+
+            request(videoLink)
+              .pipe(fs.createWriteStream(filename))
+              .on("close", function () {
+                const attachment = new MessageAttachment(filename);
+                message.channel.send(attachment).then(function () {
+                  fs.unlinkSync(filename);
+                  pupObject.browser.close();
+                });
               });
-            });
-        })
-        .catch(function (err) {
-          console.log(err);
-          message.channel.send("something went wrong teehee");
-          //handle error
+          } else {
+            console.log("could not find video link for: " + args);
+          }
         });
     } catch (e) {
       console.log(e);

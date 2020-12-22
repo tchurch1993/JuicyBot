@@ -1,6 +1,6 @@
 const UserModel = require('../models/UserModel');
 
-module.exports = function  ValidateAndAddUser(member, callback) {
+module.exports = function ValidateAndAddUser(member, callback) {
     try {
         UserModel.findOne()
           .where("GuildId").equals(member.guild.id)
@@ -15,12 +15,11 @@ module.exports = function  ValidateAndAddUser(member, callback) {
                     if(err){
                         console.error(err)
                     } else {
-                        console.log('returning new doc')
+                        console.log('Added new User: ' + newUser.UserId + "with GuildId: " + newUser.GuildId);
                         return callback(newUser)
                     }
                 });
             } else {
-                console.log('found and returning doc')
                 return callback(doc)
             }
           });

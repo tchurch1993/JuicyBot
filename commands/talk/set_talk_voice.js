@@ -13,6 +13,7 @@ class SetTalkVoiceCommand extends commando.Command {
         })
     }
 
+    //TODO: add a list of accents if their selection does not exist
     async run(message, args){
 
         if(config.voicelist[args] != undefined){

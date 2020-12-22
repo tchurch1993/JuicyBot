@@ -1,5 +1,6 @@
 const commando = require('discord.js-commando');
 const ytdl = require('ytdl-core');
+const GuildVolume = require('../../database/helpers/guildVolume')
 
 class PlayCommand extends commando.Command {
     constructor(bot){
@@ -16,6 +17,9 @@ class PlayCommand extends commando.Command {
         try {
             let serverQueue = global.queue.get(message.guild.id)
             const voiceChannel = message.member.voice.channel
+
+
+
             if(!voiceChannel){
                 return message.channel.send("You ain't in no voice channel, yo")
             }
@@ -37,18 +41,21 @@ class PlayCommand extends commando.Command {
             };
 
             if (!serverQueue) {
+                let guildVolume = await GuildVolume.GetVolume(message.guild.id);
+
                 const queueContruct = {
                   textChannel: message.channel,
                   voiceChannel: voiceChannel,
                   connection: null,
                   songs: [],
-                  volume: 5,
+                  volume: guildVolume,
                   playing: true
                 };
-            
+
+                queueContruct.songs.push(song);
                 global.queue.set(message.guild.id, queueContruct);
             
-                queueContruct.songs.push(song);
+
             
                 try {
                   var connection = await voiceChannel.join();
@@ -77,17 +84,18 @@ class PlayCommand extends commando.Command {
         }
       
         const dispatcher = serverQueue.connection
-          .play(ytdl(song.url))
+          .play(ytdl(song.url, { highWaterMark: 1 << 25 }))
           .on("finish", () => {
             serverQueue.songs.shift();
             this.play(guild, serverQueue.songs[0]);
           })
           .on("error", error => console.error(error));
-        dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+
+        dispatcher.setVolumeLogarithmic(serverQueue.volume / 100);
         serverQueue.textChannel.send(`Start playing: **${song.title}**`);
       }
 
-      validURL(str) {
+    validURL(str) {
 		let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
 		  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
 		  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address

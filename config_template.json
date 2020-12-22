@@ -22,5 +22,6 @@
       "english": "en-GB",
       "american": "en-US",
       "australian": "en-AU"
-  }
+  },
+  "tokEnabled": true
 }
