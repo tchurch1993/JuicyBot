@@ -12,6 +12,7 @@ class MemeCommand extends commando.Command {
         })
     }
 
+    //TODO: find better API for gifs/memes
     async run(message, args){
         var gfycat = new Gyfcat(config.gfycat);
 

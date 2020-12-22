@@ -10,7 +10,7 @@ class InfoAboutMeCommand extends commando.Command {
             description: 'Learn a little more about me!'
         })
     }
-
+//TODO: actually put a description or remove entirely
     async run(message, args) {
         var myInfo = new discord.MessageEmbed()
             .addField("About Me", "suck it")

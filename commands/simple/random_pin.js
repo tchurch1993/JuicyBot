@@ -12,7 +12,7 @@ function buildRichQuote(randoMessage){
     return myInfo;
 }
 
-
+//TODO: probably delete command or make it less pinned based and more database based.
 class RandomPinCommand extends commando.Command {
     constructor(bot){
         super(bot,{

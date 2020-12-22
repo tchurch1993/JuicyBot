@@ -14,7 +14,7 @@ class IPCommand extends commando.Command {
             description: 'grabs ip address of the server'
         })
     }
-
+//TODO: maybe just take this command out entirely since it is just for my minecraft peoples
     async run(message, args){
         if(config.whiteList.includes(message.author.id)){
             http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp){
