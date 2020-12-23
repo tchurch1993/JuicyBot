@@ -4,7 +4,7 @@
   "description": "a discord bot for dicking around!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node node_modules/mocha/bin/mocha --reporter list"
   },
   "keywords": [],
   "author": "Tyler Church",
@@ -22,7 +22,6 @@
     "gfycat-sdk": "^1.4.18",
     "mongoose": "^5.11.8",
     "node-fetch": "^2.6.1",
-    "node-holidayapi": "^1.0.3",
     "opusscript": "0.0.6",
     "puppeteer": "^5.5.0",
     "request": "^2.88.2",
@@ -34,5 +33,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/tchurch1993/JuicyBot"
+  },
+  "devDependencies": {
+    "mocha": "^8.2.1"
   }
 }
