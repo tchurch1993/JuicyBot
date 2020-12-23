@@ -4,6 +4,8 @@ const cheerio = require("cheerio");
 const discord = require('discord.js');
 const fetch = require('node-fetch')
 
+const HOLIDAY_API_URL = "https://www.daysoftheyear.com/days/";
+
 //TODO: fix Holiday command becuase shit don't work
 class HolidayCommand extends commando.Command {
     constructor(bot) {
@@ -19,7 +21,7 @@ class HolidayCommand extends commando.Command {
 
         try {
             var date = new Date();
-            var apiEndpoint = "https://www.daysoftheyear.com/days/";
+            var apiEndpoint = HOLIDAY_API_URL;
             apiEndpoint += date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
 
             var result = await fetch(apiEndpoint);
