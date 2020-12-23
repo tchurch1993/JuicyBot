@@ -1,9 +1,12 @@
 const commando = require("discord.js-commando");
-const { MessageAttachment } = require("discord.js");
+const {
+  MessageAttachment
+} = require("discord.js");
 const fs = require("fs");
 const $ = require("cheerio");
 const puppeteer = require("puppeteer");
 const request = require("request");
+const TTDOWNLOADER_LINK = "https://ttdownloader.com/?url=";
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -17,7 +20,6 @@ class TokCommand extends commando.Command {
     });
   }
 
-  //TODO: make it so it does not save a file and just pipes the file through memory
   async run(message, args) {
     if (!args.includes("tiktok")) {
       message.channel.send("yo, this aint no tok");
@@ -33,10 +35,15 @@ class TokCommand extends commando.Command {
           return browser.newPage();
         })
         .then(async function (page) {
-          await page.goto("https://ttdownloader.com/?url=" + args);
+          await page.goto(TTDOWNLOADER_LINK + args);
+          
+          //TODO: find a better way than to wait 10 seconds....Ultimatley would like to not use TTDownloader and find my own way tho.
           await delay(10000);
           var html = await page.content();
-          var pupObject = { html: html, browser: page.browser() };
+          var pupObject = {
+            html: html,
+            browser: page.browser()
+          };
           return pupObject;
         })
         .then(async function (pupObject) {
@@ -46,15 +53,16 @@ class TokCommand extends commando.Command {
           if (videoElement) {
             var videoLink = videoElement[0].attribs.href;
 
-            request(videoLink)
-              .pipe(fs.createWriteStream(filename))
-              .on("close", function () {
-                const attachment = new MessageAttachment(filename);
-                message.channel.send(attachment).then(function () {
-                  fs.unlinkSync(filename);
-                  pupObject.browser.close();
-                });
-              });
+            var requestOptions = { url: videoLink, encoding: null };
+            request(requestOptions, (err, response, body) => {
+
+              if (err) { return };
+
+              const attachment = new MessageAttachment(body, filename);
+
+              message.channel.send(attachment);
+            })
+
           } else {
             console.log("could not find video link for: " + args);
           }
