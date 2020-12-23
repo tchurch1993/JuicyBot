@@ -53,7 +53,7 @@ async function getTextToSpeechPath(text, user) {
 
   // Performs the text-to-speech request
   const [response] = await client.synthesizeSpeech(request);
-  // Write the binary audio content to a local file
+
   return response.audioContent;
 }
 class TalkCommand extends commando.Command {
