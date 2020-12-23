@@ -35,12 +35,11 @@ class RecordCommand extends commando.Command {
             return message.channel.send("I ain't got permissions to join bruh");
         }
 
-        if(serverQueue && serverQueue.songs > 0){
+        if (serverQueue && serverQueue.songs > 0) {
             return message.channel.send("Cannot record as I am already doing shit in the voice channel.");
         }
 
 
-        hasLeft = false;
         try {
 
             let connection = await message.member.voice.channel.join();
@@ -64,18 +63,21 @@ class RecordCommand extends commando.Command {
             });
 
             audio.on("end", () => {
-                //message.member.voice.channel.leave();
-                hasLeft = true;
+
+                message.member.voice.channel.leave();
                 let buffer = Buffer.concat(chunks);
 
                 let result = audioHelper.rawToWav(buffer);
                 let fileName = args || "clip";
+
                 const attachment = new MessageAttachment(result, fileName + ".wav");
                 message.channel.send(attachment);
 
             })
 
-            this.recordTimeout(audio, message);
+            // I thought i needed this timeout and made it for some reason but it seems to work fine without it
+
+            //this.recordTimeout(audio, message);
 
         } catch (error) {
             console.error(error);
@@ -84,17 +86,18 @@ class RecordCommand extends commando.Command {
 
     }
 
-    recordTimeout(audio, message) {
-        setTimeout(() => {
-            if (audio.readableEnded === false) {
-                this.recordTimeout(audio, message);
-                return;
-            }
-            if (!hasLeft) {
-                message.member.voice.channel.leave();
-            }
-        }, 15000);
-    }
+    // recordTimeout(audio, message) {
+    //     setTimeout(() => {
+    //         if (audio.readableEnded === false) {
+    //             console.log("readableEnded is false aparantley, restarting timeout")
+    //             this.recordTimeout(audio, message);
+    //             return;
+    //         }
+    //         if (!hasLeft) {
+    //             message.member.voice.channel.leave();
+    //         }
+    //     }, 15000);
+    // }
 }
 
 module.exports = RecordCommand;
