@@ -30,7 +30,7 @@ class HolidayCommand extends commando.Command {
             var selector = cheerio.load(html);
             //console.log(html);
 
-            var HolidayElement = selector("body").find("div[class='card card--day card--alt linked']");
+            var HolidayElement = selector("body").find("div[class='card card--day card--alt linked']").first();
             var holidayImageElement = HolidayElement.find("div[class='card__media card__image cover']").find("img");
             var holidayImageLink = holidayImageElement[0].attribs.src;
 
@@ -43,7 +43,7 @@ class HolidayCommand extends commando.Command {
                 .setTitle(holidayTitle)
                 .setDescription(holidayDescription)
                 .setURL(holidayURL)
-                .setColor(0xFF0000)
+                .setColor('RANDOM')
                 .setThumbnail(holidayImageLink)
                 .setFooter((date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear())
             message.channel.send(holidayMessage);
