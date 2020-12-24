@@ -17,7 +17,8 @@ const config = require("./config.json");
 // this is what we're refering to. Your client.
 const client = new CommandoClient({
   commandPrefix: config.prefix,
-  owner: '130873563317010433'
+  owner: '130873563317010433',
+  invite: "https://discord.com/oauth2/authorize?client_id=339515606363537409&scope=bot&permissions=36818240"
 })
 
 sqlite.open(path.join(__dirname, "settings.sqlite3")).then((db) => {
@@ -57,6 +58,7 @@ db.once('open', function () {
   console.log("db connected: " + db.name)
 })
 
+//TODO: do something with the activity that shows on the bot
 client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}! (${client.user.id})`)
   client.user.setActivity(`Serving ${client.guilds.cache.size} juicy servers`)
