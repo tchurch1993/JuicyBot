@@ -21,12 +21,16 @@ class HolidayCommand extends commando.Command {
 
         try {
             var date = new Date();
+            var year = date.getFullYear();
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
             var apiEndpoint = HOLIDAY_API_URL;
-            apiEndpoint += date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+            apiEndpoint += year + "/" + month + "/" + day;
 
             var result = await fetch(apiEndpoint);
             //console.log(result);
             var html = await result.text();
+
             var selector = cheerio.load(html);
             //console.log(html);
 
