@@ -55,7 +55,6 @@ class HolidayCommand extends commando.Command {
 
         } catch (err) {
             console.error(err);
-            message.channel.send("aww shit, somebody took a big ol' poopy")
 
         }
 
