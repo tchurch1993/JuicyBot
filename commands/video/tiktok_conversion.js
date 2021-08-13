@@ -4,8 +4,10 @@ const {
 } = require("discord.js");
 const fs = require("fs");
 const $ = require("cheerio");
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-extra");
 const request = require("request");
+const path = require("path");
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const TTDOWNLOADER_LINK = "https://ttdownloader.com/?url=";
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -29,42 +31,72 @@ class TokCommand extends commando.Command {
       const date = new Date();
       const filename = date.getTime() + ".mp4";
 
+      puppeteer.use(StealthPlugin());
+
       puppeteer
-        .launch()
-        .then(function (browser) {
-          return browser.newPage();
+        .launch({
+          headless: true
         })
-        .then(async function (page) {
-          await page.goto(TTDOWNLOADER_LINK + args);
-          
-          //TODO: find a better way than to wait 10 seconds....Ultimatley would like to not use TTDownloader and find my own way tho.
-          await delay(10000);
-          var html = await page.content();
-          var pupObject = {
-            html: html,
-            browser: page.browser()
-          };
+        .then(function (browser) {
+          return browser.pages();
+        })
+        .then(async function (pages) {
+          try {
+            var page = pages[0];
+            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36');
+            await page.goto(args);
+
+            var html = await page.content();
+            var pupObject = {
+              html: html,
+              browser: page.browser()
+            };
+            page.close();
+          } catch (error) {
+            console.error(error);
+          }
+
           return pupObject;
         })
         .then(async function (pupObject) {
-          var html = pupObject.html;
-          var videoElement = $("a.download-link", html);
+          try {
 
-          if (videoElement) {
-            var videoLink = videoElement[0].attribs.href;
 
-            var requestOptions = { url: videoLink, encoding: null };
-            request(requestOptions, (err, response, body) => {
+            var html = pupObject.html;
+            var videoElement = $.default("video", html);
 
-              if (err) { return };
+            if (videoElement) {
+              var videoLink = videoElement[0].attribs.src;
 
-              const attachment = new MessageAttachment(body, filename);
+              var requestOptions = {
+                url: videoLink,
+                encoding: null,
+                headers: {
+                  referer: args
+                }
+              };
+              request(requestOptions, (err, response, body) => {
 
-              message.channel.send(attachment);
-            })
+                console.log(response.statusCode);
 
-          } else {
-            console.log("could not find video link for: " + args);
+                if (err) {
+                  return
+                };
+                // checks to see if the body even contains a video buffer by checking its length
+                if (response.statusCode != 200) {
+                  return
+                };
+
+                const attachment = new MessageAttachment(body, filename);
+
+                message.channel.send(attachment);
+              })
+
+            } else {
+              console.log("could not find video link for: " + args);
+            }
+          } catch (error) {
+            console.error(error);
           }
         });
     } catch (e) {
