@@ -19,7 +19,9 @@ const _config = require("./config.json");
 const client = new CommandoClient({
   commandPrefix: _config.prefix,
   owner: '130873563317010433',
-  invite: "https://discord.com/oauth2/authorize?client_id=339515606363537409&scope=bot&permissions=36818240"
+  invite: "https://discord.com/oauth2/authorize?client_id=339515606363537409&scope=bot&permissions=36818240",
+  disableEveryone: true,
+  unknownCommandResponse: false
 })
 var sqlite3path = path.join(__dirname, "settings.sqlite3");
 // @ts-ignore
