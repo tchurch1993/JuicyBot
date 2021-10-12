@@ -1,33 +1,39 @@
-const commando = require('discord.js-commando');
-const fetch = require('node-fetch')
+const { Command } = require("@sapphire/framework");
+const { Message } = require("discord.js");
+const fetch = require("node-fetch");
 
-class DadJokeCommand extends commando.Command {
-    constructor(bot) {
-        super(bot, {
-            name: 'dadjoke',
-            group: 'funny',
-            memberName: 'dadjoke',
-            description: 'tells hilarious dad jokes. you are welcome'
-        })
+class DadJokeCommand extends Command {
+  constructor(bot) {
+    super(bot, {
+      name: "dadjoke",
+      group: "funny",
+      memberName: "dadjoke",
+      description: "tells hilarious dad jokes. you are welcome",
+    });
+  }
+
+  /**
+   *
+   * @param { Message } message
+   * @param {string} args
+   */
+  async run(message, args) {
+    try {
+      var result = await fetch("https://icanhazdadjoke.com/", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      var text = await result.json();
+
+      message.channel.send({ content: text.joke });
+    } catch {
+      message.channel.send({
+        content: "aww shit, somebody took a big ol' poopy",
+      });
     }
-
-    async run(message, args) {
-
-        try {
-            var result = await fetch('https://icanhazdadjoke.com/', {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            var text = await result.json();
-
-            message.channel.send(text.joke);
-        } catch {
-            message.channel.send("aww shit, somebody took a big ol' poopy")
-
-        }
-    }
+  }
 }
 
 module.exports = DadJokeCommand;

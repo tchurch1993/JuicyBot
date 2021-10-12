@@ -1,4 +1,4 @@
-const commando = require("discord.js-commando");
+const { Command } = require("@sapphire/framework");
 const { MessageAttachment, Message } = require("discord.js");
 const fs = require("fs");
 const $ = require("cheerio");
@@ -10,7 +10,7 @@ const TTDOWNLOADER_LINK = "https://ttdownloader.com/?url=";
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-class TokCommand extends commando.Command {
+class TokCommand extends Command {
   constructor(bot) {
     super(bot, {
       name: "tok",

@@ -1,9 +1,9 @@
-const commando = require("discord.js-commando");
+const { Command } = require("@sapphire/framework");
 const mongoose = require("mongoose");
 const ValidateAndAddUser = require("../../database/helpers/userValidation");
-const UserModel = require('../../database/models/UserModel')
+const UserModel = require("../../database/models/UserModel");
 
-class FishCommand extends commando.Command {
+class FishCommand extends Command {
   constructor(bot) {
     super(bot, {
       name: "fish",
@@ -16,15 +16,14 @@ class FishCommand extends commando.Command {
 
   //TODO: delete fish command because i probably wont flesh this out
   async run(message, args) {
-    ValidateAndAddUser(message.member, function(user){
-      
-        console.log(user)
-        
-        if(user){
-            message.channel.send(user.get("UserId"));
-        } else {
-            message.channel.send("shit broke");
-        }
+    ValidateAndAddUser(message.member, function (user) {
+      console.log(user);
+
+      if (user) {
+        message.channel.send(user.get("UserId"));
+      } else {
+        message.channel.send("shit broke");
+      }
     });
   }
 }
