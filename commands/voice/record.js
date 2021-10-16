@@ -1,7 +1,10 @@
 const { Command } = require("@sapphire/framework");
 const audioHelper = require("../../helpers/audio/audio");
+//add discord voice
+
 const fs = require("fs");
 const { MessageAttachment } = require("discord.js");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 let hasLeft;
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -17,7 +20,8 @@ class RecordCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
+    args = parsedArgs(args);
     let serverQueue = global.queue.get(message.guild.id);
     const voiceChannel = message.member.voice.channel;
 
@@ -62,7 +66,7 @@ class RecordCommand extends Command {
         let fileName = args || "clip";
 
         const attachment = new MessageAttachment(result, fileName + ".wav");
-        message.channel.send(attachment);
+        message.channel.send({ files: [attachment] });
       });
 
       // I thought i needed this timeout and made it for some reason but it seems to work fine without it

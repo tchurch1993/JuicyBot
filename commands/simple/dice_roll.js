@@ -1,4 +1,5 @@
 const { Command } = require("@sapphire/framework");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class DiceRollCommand extends Command {
   constructor(bot) {
@@ -10,7 +11,7 @@ class DiceRollCommand extends Command {
     });
   }
   //TODO: add more dice with different number of sides
-  async run(message, args) {
+  async messageRun(message, args) {
     var diceRoll = Math.floor(Math.random() * 6) + 1;
     message.reply("Your dice landed on " + diceRoll);
   }

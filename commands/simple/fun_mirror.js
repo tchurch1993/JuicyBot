@@ -1,4 +1,5 @@
 const { Command } = require("@sapphire/framework");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class FunMirrorCommand extends Command {
   constructor(bot) {
@@ -11,7 +12,7 @@ class FunMirrorCommand extends Command {
   }
 
   //TODO: probably remove
-  async run(message, args) {
+  async messageRun(message, args) {
     message.reply(message.author.avatarURL());
   }
 }

@@ -1,5 +1,6 @@
 const { Command } = require("@sapphire/framework");
 const fetch = require("node-fetch");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class PussCommand extends Command {
   constructor(bot) {
@@ -11,7 +12,7 @@ class PussCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     try {
       const { file } = await fetch("https://aws.random.cat/meow").then(
         (Response) => Response.json()

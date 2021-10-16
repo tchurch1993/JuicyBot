@@ -3,6 +3,7 @@ const config = require("./../../config.json");
 const cheerio = require("cheerio");
 const discord = require("discord.js");
 const fetch = require("node-fetch");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 const HOLIDAY_API_URL = "https://www.daysoftheyear.com/days/";
 
@@ -17,7 +18,7 @@ class HolidayCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     try {
       var date = new Date();
       var year = date.getFullYear();

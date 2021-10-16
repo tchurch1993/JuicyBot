@@ -7,6 +7,7 @@ const request = require("request");
 const path = require("path");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const TTDOWNLOADER_LINK = "https://ttdownloader.com/?url=";
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -17,10 +18,12 @@ class TokCommand extends Command {
       group: "video",
       memberName: "tok",
       description: "makes TikTok links viewable in discord :)",
+      typing: true,
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args, commandContext) {
+    args = parsedArgs(args);
     if (!args.includes("tiktok")) {
       message.channel.send("yo, this aint no tok");
       return;
@@ -89,19 +92,19 @@ class TokCommand extends Command {
 
                 if (body.byteLength > 8000000) {
                   // create the FFmpeg instance and load it
-                  const ffmpeg = require("fluent-ffmpeg");
-                  ffmpeg.setFfmpegPath("C:\\ffmpeg\\bin\\ffmpeg.exe");
+                  // const ffmpeg = require("fluent-ffmpeg");
+                  // ffmpeg.setFfmpegPath("C:\\ffmpeg\\bin\\ffmpeg.exe");
 
                   //reduce size of video buffer
                   var newBuffer = body.slice(0, 8000000);
                   body = newBuffer;
 
                   const attachment = new MessageAttachment(body, filename);
-                  message.channel.send(attachment);
+                  message.channel.send({ files: [attachment] });
                 } else {
                   const attachment = new MessageAttachment(body, filename);
 
-                  message.channel.send(attachment);
+                  message.channel.send({ files: [attachment] });
                 }
               });
             } else {

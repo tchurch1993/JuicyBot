@@ -1,5 +1,6 @@
 const { Command } = require("@sapphire/framework");
 const discord = require("discord.js");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 function buildRichQuote(randoMessage) {
   var date = randoMessage[0].createdAt;
@@ -24,7 +25,7 @@ class RandomPinCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     message.channel.messages.fetchPinned().then((messages) => {
       if (messages.size > 0) {
         var randoMessage = messages.random(1);

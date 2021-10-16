@@ -1,6 +1,7 @@
 const { Command } = require("@sapphire/framework");
 const { Message } = require("discord.js");
 const fetch = require("node-fetch");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class DadJokeCommand extends Command {
   constructor(bot) {
@@ -17,7 +18,7 @@ class DadJokeCommand extends Command {
    * @param { Message } message
    * @param {string} args
    */
-  async run(message, args) {
+  async messageRun(message, args) {
     try {
       var result = await fetch("https://icanhazdadjoke.com/", {
         method: "GET",

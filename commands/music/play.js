@@ -1,6 +1,7 @@
 const { Command } = require("@sapphire/framework");
 const ytdl = require("ytdl-core");
 const GuildVolume = require("../../database/helpers/guildVolume");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class PlayCommand extends Command {
   constructor(bot) {
@@ -13,7 +14,7 @@ class PlayCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     try {
       let serverQueue = global.queue.get(message.guild.id);
       const voiceChannel = message.member.voice.channel;

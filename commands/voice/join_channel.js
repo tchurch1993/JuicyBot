@@ -1,5 +1,6 @@
 const { Command } = require("@sapphire/framework");
 const YTDL = require("ytdl-core");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 function Play(connection, message) {
   var server = servers[message.guild.id];
@@ -29,7 +30,7 @@ class JoinChannelCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     if (message.member.voice.channel) {
       if (!message.guild.voiceConnection) {
         message.member.voice.channel.join();

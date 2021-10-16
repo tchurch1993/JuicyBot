@@ -1,20 +1,21 @@
 const { Command } = require("@sapphire/framework");
 const config = require("../../config.json");
 const ValidateAndAddUser = require("../../database/helpers/userValidation");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class SetTalkVoiceCommand extends Command {
   constructor(bot) {
     super(bot, {
-      name: "setvoice",
+      name: "setTalkVoice",
       group: "talk",
-      memberName: "setvoice",
+      memberName: "setTalkVoice",
       description: "sets the voice for the talk command",
       guildOnly: true,
     });
   }
 
   //TODO: add a list of accents if their selection does not exist
-  async run(message, args) {
+  async messageRun(message, args) {
     if (config.voicelist[args] != undefined) {
       ValidateAndAddUser(message.member, (user) => {
         var voice = config.voicelist[args];

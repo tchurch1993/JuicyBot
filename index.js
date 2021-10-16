@@ -11,14 +11,29 @@ const tok = require("./helpers/commandless/tok");
 // config.prefix contains the message prefix.
 const _config = require("./config.json");
 
+const mongoose = require("mongoose");
+
+mongoose.connect(_config.mongoDb, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+var db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "connection error:"));
+
+var event = db.once("open", function () {
+  console.log("db connected: " + db.name);
+});
+
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
 // this is what we're refering to. Your client.
 const sapphireClient = new SapphireClient({
   presence: {
     activity: {
-      name: "butts",
-      type: "TESTING",
+      name: "to butts",
+      type: "LISTENING",
     },
   },
   defaultPrefix: _config.prefix,
@@ -31,53 +46,12 @@ const sapphireClient = new SapphireClient({
     "GUILD_VOICE_STATES",
   ],
 });
-// const client = new CommandoClient({
-//   commandPrefix: _config.prefix,
-//   owner: "130873563317010433",
-//   invite:
-//     "https://discord.com/oauth2/authorize?client_id=339515606363537409&scope=bot&permissions=36818240",
-//   disableEveryone: true,
-//   unknownCommandResponse: false,
-// });
 
 // var sqlite3path = path.join(__dirname, "settings.sqlite3");
 // // @ts-ignore
 // sqlite.open({ filename: sqlite3path, driver: sqlite3.Database }).then((db) => {
 //   client.setProvider(new SQLiteProvider(db));
 // });
-
-// client.registry
-//   .registerDefaultTypes()
-//   .registerGroups([
-//     ["simple", "Simple"],
-//     ["gifs", "Gifs"],
-//     ["voice", "Voice"],
-//     ["talk", "Talk"],
-//     ["holiday", "Holiday"],
-//     ["testcommands", "TestCommands"],
-//     ["video", "Video"],
-//     ["games", "Games"],
-//     ["funny", "Funny"],
-//     ["music", "Music"],
-//   ])
-//   .registerDefaultGroups()
-//   .registerDefaultCommands()
-//   .registerCommandsIn(path.join(__dirname, "commands"));
-
-const mongoose = require("mongoose");
-
-mongoose.connect(_config.mongoDb, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-var db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "connection error:"));
-
-db.once("open", function () {
-  console.log("db connected: " + db.name);
-});
 
 //TODO: do something with the activity that shows on the bot
 // @ts-ignore
@@ -86,14 +60,8 @@ sapphireClient.once("ready", () => {
   console.log("Sapphire is ready!");
 });
 
-// client.once("ready", () => {
-//   console.log(`Logged in as ${client.user.tag}! (${client.user.id})`);
-//   client.user.setActivity(`Serving ${client.guilds.cache.size} juicy servers`);
-// });
-
 // @ts-ignore
 sapphireClient.on("error", console.error);
-// client.on("error", console.error);
 
 // @ts-ignore
 sapphireClient.on("guildCreate", (guild) => {
@@ -101,15 +69,6 @@ sapphireClient.on("guildCreate", (guild) => {
     `New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`
   );
 });
-// client.on("guildCreate", (guild) => {
-//   // This event triggers when the bot joins a guild.
-//   //TODO: add Guild to DB
-//   // @ts-ignore
-//   console.log(
-//     `New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`
-//   );
-//   client.user.setActivity(`Serving ${client.guilds.cache.size} juicy servers`);
-// });
 
 // @ts-ignore
 sapphireClient.on("guildDelete", (guild) => {
@@ -118,32 +77,18 @@ sapphireClient.on("guildDelete", (guild) => {
   // @ts-ignore
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
-// client.on("guildDelete", (guild) => {
-//   // this event triggers when the bot is removed from a guild.
-//   // TODO: Delete guild from DB
-//   // @ts-ignore
-//   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-//   client.user.setActivity(`Serving ${client.guilds.cache.size} juicy servers`);
-// });
 
 // @ts-ignore
 sapphireClient.on("disconnect", (event) => {
   console.log(event);
   sapphireClient.login(_config.token);
 });
-// client.on("disconnect", (event) => {
-//   console.log(event);
-//   client.login(_config.token);
-// });
 
 if (_config.tokEnabled) {
   // @ts-ignore
   sapphireClient.on("messageCreate", async (message) => {
     tok(message, sapphireClient);
   });
-  // client.on("message", async (message) => {
-  //   tok(message, client);
-  // });
 }
 
 // @ts-ignore
@@ -172,4 +117,3 @@ global.servers = {};
 //   const command = args.shift().toLowerCase();
 //   });
 sapphireClient.login(_config.token);
-//client.login(_config.token);

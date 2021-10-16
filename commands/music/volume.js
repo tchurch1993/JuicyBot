@@ -1,5 +1,6 @@
 const { Command } = require("@sapphire/framework");
 const GuildVolume = require("../../database/helpers/guildVolume");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class VolumeCommand extends Command {
   constructor(bot) {
@@ -12,7 +13,7 @@ class VolumeCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     let guildId = message.guild.id;
     let serverQueue = global.queue.get(guildId);
 

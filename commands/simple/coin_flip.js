@@ -1,4 +1,5 @@
 const { Command } = require("@sapphire/framework");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class CoinFlipCommand extends Command {
   constructor(bot) {
@@ -10,7 +11,7 @@ class CoinFlipCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     var chance = Math.floor(Math.random() * 2);
     if (chance == 0) {
       message.reply("Your coin landed on Heads!");

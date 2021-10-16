@@ -1,4 +1,5 @@
 const { Command } = require("@sapphire/framework");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class SkipCommand extends Command {
   constructor(bot) {
@@ -11,7 +12,7 @@ class SkipCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     try {
       if (!message.member.voice.channel) {
         return message.channel.send(

@@ -1,4 +1,5 @@
 const { Command } = require("@sapphire/framework");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class LeaveChannelCommand extends Command {
   constructor(bot) {
@@ -11,7 +12,7 @@ class LeaveChannelCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     try {
       message.member.voice.channel.leave();
     } catch (err) {

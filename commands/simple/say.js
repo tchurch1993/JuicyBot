@@ -1,4 +1,5 @@
 const { Command } = require("@sapphire/framework");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class SayCommand extends Command {
   constructor(bot) {
@@ -11,7 +12,7 @@ class SayCommand extends Command {
   }
 
   //TODO: delete from bot but keep as a template for future commands
-  async run(message, args) {
+  async messageRun(message, args) {
     message.channel.send(args);
   }
 }

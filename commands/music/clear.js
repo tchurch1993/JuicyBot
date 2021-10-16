@@ -1,4 +1,5 @@
 const { Command } = require("@sapphire/framework");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class ClearCommand extends Command {
   constructor(bot) {
@@ -11,7 +12,7 @@ class ClearCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     try {
       let serverQueue = global.queue.get(message.guild.id);
       if (!serverQueue) return message.channel.send("no queue to clear bruv");

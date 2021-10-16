@@ -1,5 +1,6 @@
 const { Command } = require("@sapphire/framework");
 const fetch = require("node-fetch");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class TestCommand extends Command {
   constructor(bot) {
@@ -12,7 +13,7 @@ class TestCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     // const { file } = await fetch('https://discordapp.com/api/channels/' + message.channel.id +'/pins')
     // .then(Response => Response.json())
     // .catch(console.log('error i guess'));

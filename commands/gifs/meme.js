@@ -1,6 +1,7 @@
 const { Command } = require("@sapphire/framework");
 const Gyfcat = require("gfycat-sdk");
 const config = require("../../config.json");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class MemeCommand extends Command {
   constructor(bot) {
@@ -13,7 +14,7 @@ class MemeCommand extends Command {
   }
 
   //TODO: find better API for gifs/memes
-  async run(message, args) {
+  async messageRun(message, args) {
     var gfycat = new Gyfcat(config.gfycat);
 
     gfycat.authenticate((err, data) => {

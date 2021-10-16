@@ -2,6 +2,7 @@ const { Command } = require("@sapphire/framework");
 const textToSpeech = require("@google-cloud/text-to-speech");
 const { Readable } = require("stream");
 const ValidateAndAddUser = require("../../database/helpers/userValidation");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 process.env.GOOGLE_APPLICATION_CREDENTIALS =
   __dirname + "../../../LinkDump-428fe5f385e2.json";
 
@@ -58,7 +59,7 @@ class TalkCommand extends Command {
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args) {
     let serverQueue = global.queue.get(message.guild.id);
     if (serverQueue && serverQueue.songs.length > 0) {
       return message.channel.send(
