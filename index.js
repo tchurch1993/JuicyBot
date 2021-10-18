@@ -5,6 +5,16 @@ const { SapphireClient } = require("@sapphire/framework");
 // const sqlite = require("sqlite");
 // const sqlite3 = require("sqlite3");
 const tok = require("./helpers/commandless/tok");
+
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 8080;
+
+//ping server
+app.get("/", (req, res) => {
+  res.send("pong");
+});
+
 // Here we load the config.json file that contains our token and our prefix values.
 
 // config.token contains the bot's token
@@ -95,6 +105,7 @@ if (_config.tokEnabled) {
 global.currentTeamMembers = [];
 // @ts-ignore
 global.queue = new Map();
+global.subscriptions = new Map();
 // @ts-ignore
 global.servers = {};
 
@@ -117,3 +128,6 @@ global.servers = {};
 //   const command = args.shift().toLowerCase();
 //   });
 sapphireClient.login(_config.token);
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});

@@ -16,21 +16,19 @@ const parsedArgs = require("../../helpers/parsers/extractargs");
 
 const underageSoundPath = "underage.mp3";
 
-const player = createAudioPlayer();
+// function Play(connection, soundPath) {
+//   try {
+//     const dispatcher = connection.play(soundPath);
+//     dispatcher.on("finish", (finish) => {
+//       connection.disconnect();
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     connection.disconnect();
+//   }
+// }
 
-function Play(connection, soundPath) {
-  try {
-    const dispatcher = connection.play(soundPath);
-    dispatcher.on("finish", (finish) => {
-      connection.disconnect();
-    });
-  } catch (error) {
-    console.log(error);
-    connection.disconnect();
-  }
-}
-
-function playSong(soundPath) {
+function playSong(soundPath, player) {
   const resource = createAudioResource(soundPath, {
     inputType: StreamType.Arbitrary,
   });
@@ -44,7 +42,7 @@ async function connectToChannel(voiceChannel) {
   const connection = joinVoiceChannel({
     channelId: voiceChannel.id,
     guildId: voiceChannel.guild.id,
-    adapterCreator: createDiscordJSAdapter(voiceChannel),
+    adapterCreator: voiceChannel.guild.voiceAdapterCreator,
   });
 
   try {
@@ -75,27 +73,31 @@ class VoiceCommand extends Command {
    */
   async messageRun(message, args) {
     args = parsedArgs(args);
-    let serverQueue = global.queue.get(message.guild.id);
-    if (serverQueue && serverQueue.songs > 0) {
-      return message.channel.send(
-        "already shit playing bruh: " + serverQueue.songs[0].title
-      );
-    }
+    // let serverQueue = global.queue.get(message.guild.id);
+    // if (serverQueue && serverQueue.songs > 0) {
+    //   return message.channel.send(
+    //     "already shit playing bruh: " + serverQueue.songs[0].title
+    //   );
+    // }
     let soundPath = config.mp3Paths[args];
     if (soundPath != null) {
       var voiceChannel = message.member.voice.channel;
       if (voiceChannel) {
-        if (!message.guild.voiceConnection) {
-          try {
-            playSong(underageSoundPath);
-            const connection = await connectToChannel(voiceChannel);
-            connection.subscribe(player);
-          } catch (error) {
+        try {
+          var player = createAudioPlayer({
+            debug: true,
+            behaviors: { noSubscriber: "paused" },
+          });
+          await playSong(underageSoundPath, player);
+          const connection = await connectToChannel(voiceChannel);
+          var sub = connection.subscribe(player);
+          sub.player.on("error", (error) => {
             console.log(error);
-            return message.channel.send("error playing " + args);
-          }
-        } else {
-          return message.channel.send("already playing shit bruh");
+            connection.disconnect();
+          });
+        } catch (error) {
+          console.log(error);
+          return message.channel.send("error playing " + args);
         }
       } else {
         message.reply("You must be in a voice channel to summon me!");
