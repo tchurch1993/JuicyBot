@@ -19,6 +19,7 @@ class LeaveCommand extends Command {
       subscriptions.delete(message.guildId);
       await message.reply({ content: `Left channel!`, ephemeral: true });
     } else {
+      message.member.voice.channel.destroy();
       await message.reply("Not playing in this server!");
     }
   }

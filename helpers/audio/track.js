@@ -82,6 +82,15 @@ module.exports = class Track {
   }
 
   /**
+   * creates an AudioResource from a sound
+   */
+  createSoundResource() {
+    return createAudioResource(this.url, {
+      metadata: this,
+    });
+  }
+
+  /**
    * Creates a Track from a video URL and lifecycle callback methods.
    *
    * @param url The URL of the video
@@ -111,6 +120,35 @@ module.exports = class Track {
       title: info.videoDetails.title,
       url,
       ...wrappedMethods,
+    });
+  }
+
+  /**
+   *  Creates a Track from a sound file path and lifecycle callback methods.
+   * @param path The path to the sound file
+   * @param methods Lifecycle callbacks
+   * @returns The created Track
+   */
+  static async fromFile(path, methods) {
+    // The methods are wrapped so that we can ensure that they are only called once.
+    const wrappedMethods = {
+      onStart() {
+        wrappedMethods.onStart = noop;
+        methods.onStart();
+      },
+      onFinish() {
+        wrappedMethods.onFinish = noop;
+        methods.onFinish();
+      },
+      onError(error) {
+        wrappedMethods.onError = noop;
+        methods.onError(error);
+      },
+    };
+    return new Track({
+      title: path,
+      url: path,
+      ...methods,
     });
   }
 };

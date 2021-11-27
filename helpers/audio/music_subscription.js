@@ -83,8 +83,10 @@ module.exports = class MusicSubscription {
       ) {
         // If the Idle state is entered from a non-Idle state, it means that an audio resource has finished playing.
         // The queue is then processed to start playing the next track, if one is available.
-        oldState.resource.metadata.onFinish();
-        void this.processQueue();
+        var goToNextTrack = oldState.resource.metadata.onFinish();
+        if (goToNextTrack) {
+          void this.processQueue();
+        }
       } else if (newState.status === AudioPlayerStatus.Playing) {
         // If the Playing state has been entered, then a new track has started playback.
         newState.resource.metadata.onStart();
@@ -106,6 +108,21 @@ module.exports = class MusicSubscription {
   enqueue(track) {
     this.queue.push(track);
     void this.processQueue();
+  }
+
+  /**
+   *  play a track
+   * @param {Track} track
+   */
+  async play(track) {
+    try {
+      // Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
+      const resource = await track.createSoundResource();
+      this.audioPlayer.play(resource);
+    } catch (error) {
+      // If an error occurred, try the next item of the queue instead
+      track.onError(error);
+    }
   }
 
   /**

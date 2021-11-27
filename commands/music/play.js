@@ -73,6 +73,7 @@ class PlayCommand extends Command {
           //   .catch(console.warn);
         },
         onFinish() {
+          console.log("test");
           // message
           //   .reply({ content: "Now finished!", ephemeral: true })
           //   .catch(console.warn);
@@ -84,6 +85,7 @@ class PlayCommand extends Command {
           //   .catch(console.warn);
         },
       });
+      subscription.playNextTrack = true;
       // Enqueue the track and reply a success message to the user
       subscription.enqueue(track);
       await message.reply(`Enqueued **${track.title}**`);

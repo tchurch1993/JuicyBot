@@ -13,6 +13,8 @@ const {
 const createDiscordJSAdapter = require("../../helpers/audio/adapter");
 const config = require("./../../config.json");
 const parsedArgs = require("../../helpers/parsers/extractargs");
+const MusicSubscription = require("../../helpers/audio/music_subscription");
+const Track = require("../../helpers/audio/track");
 
 const underageSoundPath = "underage.mp3";
 
@@ -83,22 +85,71 @@ class VoiceCommand extends Command {
     if (soundPath != null) {
       var voiceChannel = message.member.voice.channel;
       if (voiceChannel) {
-        try {
-          var player = createAudioPlayer({
-            debug: true,
-            behaviors: { noSubscriber: "paused" },
-          });
-          await playSong(underageSoundPath, player);
-          const connection = await connectToChannel(voiceChannel);
-          var sub = connection.subscribe(player);
-          sub.player.on("error", (error) => {
-            console.log(error);
-            connection.disconnect();
-          });
-        } catch (error) {
-          console.log(error);
-          return message.channel.send("error playing " + args);
+        var subscription = global.subscriptions.get(message.guild.id);
+        if (!subscription) {
+          if (
+            message.member instanceof GuildMember &&
+            message.member.voice.channel
+          ) {
+            const channel = message.member.voice.channel;
+            subscription = new MusicSubscription(
+              joinVoiceChannel({
+                channelId: channel.id,
+                guildId: channel.guild.id,
+                adapterCreator: channel.guild.voiceAdapterCreator,
+              })
+            );
+            subscription.voiceConnection.on("error", console.warn);
+            global.subscriptions.set(message.guildId, subscription);
+          }
         }
+
+        var connectionState = subscription.voiceConnection.state();
+        if (
+          !subscription.readyLock &&
+          (connectionState.status === "connecting" ||
+            connectionState.status === "signalling")
+        ) {
+          subscription.readyLock = true;
+
+          // Make sure the connection is ready before processing the user's request
+          try {
+            await entersState(
+              subscription.voiceConnection,
+              VoiceConnectionStatus.Ready,
+              20e3
+            );
+          } catch (error) {
+            console.warn(error);
+            await message.reply(
+              "Failed to join voice channel within 20 seconds, please try again later!"
+            );
+            return;
+          } finally {
+            subscription.readyLock = false;
+          }
+        }
+
+        const track = await Track.fromFile(soundPath, {
+          onStart() {
+            // message
+            //   .reply({ content: "Now playing!", ephemeral: true })
+            //   .catch(console.warn);
+          },
+          onFinish() {
+            return false;
+            // message
+            //   .reply({ content: "Now finished!", ephemeral: true })
+            //   .catch(console.warn);
+          },
+          onError(error) {
+            console.warn(error);
+            // message
+            //   .reply({ content: `Error: ${error.message}`, ephemeral: true })
+            //   .catch(console.warn);
+          },
+        });
+        subscription.play(track);
       } else {
         message.reply("You must be in a voice channel to summon me!");
       }
