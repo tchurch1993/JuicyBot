@@ -1,7 +1,8 @@
 node_modules
-node_modules
 config.json
 
 LinkDump-428fe5f385e2.json
 settings.sqlite3
 .vscode/launch.json
+yarn.lock
+package-lock.json
