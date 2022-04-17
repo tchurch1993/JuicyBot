@@ -23,7 +23,7 @@ class TokCommand extends Command {
   }
 
   async messageRun(message, args, commandContext) {
-    args = parsedArgs(args);
+    //args = parsedArgs(args);
     if (!args.includes("tiktok")) {
       message.channel.send("yo, this aint no tok");
       return;

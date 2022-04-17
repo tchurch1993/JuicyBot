@@ -21,4 +21,25 @@ const parsedArgs = require("../../helpers/parsers/extractargs");
 //   }
 // }
 
-// module.exports = LeaveChannelCommand;
+class LeaveChannelCommand extends Command {
+  constructor(bot) {
+    super(bot, {
+      name: "leave",
+      group: "voice",
+      memberName: "leave",
+      description: "leaves the channel of the commander",
+      guildOnly: true,
+    });
+  }
+
+  async messageRun(message, args) {
+    var subscription = global.subscriptions.get(message.guild.id);
+
+    if (subscription) {
+      subscription.voiceConnection.disconnect();
+      global.subscriptions.delete(message.guild.id);
+    }
+  }
+}
+
+module.exports = LeaveChannelCommand;

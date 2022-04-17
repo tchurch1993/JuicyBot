@@ -1,60 +1,12 @@
 const { Command } = require("@sapphire/framework");
 const { Message } = require("discord.js");
-const {
-  joinVoiceChannel,
-  createAudioPlayer,
-  createAudioResource,
-  entersState,
-  StreamType,
-  AudioPlayerStatus,
-  VoiceConnectionStatus,
-} = require("@discordjs/voice");
+const fs = require("fs");
+const { entersState, VoiceConnectionStatus } = require("@discordjs/voice");
 // add adapter.js
-const createDiscordJSAdapter = require("../../helpers/audio/adapter");
 const config = require("./../../config.json");
 const parsedArgs = require("../../helpers/parsers/extractargs");
-const MusicSubscription = require("../../helpers/audio/music_subscription");
 const Track = require("../../helpers/audio/track");
-
-const underageSoundPath = "underage.mp3";
-
-// function Play(connection, soundPath) {
-//   try {
-//     const dispatcher = connection.play(soundPath);
-//     dispatcher.on("finish", (finish) => {
-//       connection.disconnect();
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     connection.disconnect();
-//   }
-// }
-
-function playSong(soundPath, player) {
-  const resource = createAudioResource(soundPath, {
-    inputType: StreamType.Arbitrary,
-  });
-
-  player.play(resource);
-
-  return entersState(player, AudioPlayerStatus.Playing, 5e3);
-}
-
-async function connectToChannel(voiceChannel) {
-  const connection = joinVoiceChannel({
-    channelId: voiceChannel.id,
-    guildId: voiceChannel.guild.id,
-    adapterCreator: voiceChannel.guild.voiceAdapterCreator,
-  });
-
-  try {
-    await entersState(connection, VoiceConnectionStatus.Ready, 30e3);
-    return connection;
-  } catch (error) {
-    connection.destroy();
-    throw error;
-  }
-}
+const { getOrCreateSubscription } = require("../../helpers/audio/util");
 
 class VoiceCommand extends Command {
   constructor(bot) {
@@ -75,36 +27,18 @@ class VoiceCommand extends Command {
    */
   async messageRun(message, args) {
     args = parsedArgs(args);
-    // let serverQueue = global.queue.get(message.guild.id);
-    // if (serverQueue && serverQueue.songs > 0) {
-    //   return message.channel.send(
-    //     "already shit playing bruh: " + serverQueue.songs[0].title
-    //   );
-    // }
-    let soundPath = config.mp3Paths[args];
-    if (soundPath != null) {
-      var voiceChannel = message.member.voice.channel;
-      if (voiceChannel) {
-        var subscription = global.subscriptions.get(message.guild.id);
-        if (!subscription) {
-          if (
-            message.member instanceof GuildMember &&
-            message.member.voice.channel
-          ) {
-            const channel = message.member.voice.channel;
-            subscription = new MusicSubscription(
-              joinVoiceChannel({
-                channelId: channel.id,
-                guildId: channel.guild.id,
-                adapterCreator: channel.guild.voiceAdapterCreator,
-              })
-            );
-            subscription.voiceConnection.on("error", console.warn);
-            global.subscriptions.set(message.guildId, subscription);
-          }
-        }
 
-        var connectionState = subscription.voiceConnection.state();
+    let soundPath = config.mp3Paths[args];
+
+    if (soundPath != null) {
+      // create file buffer from path
+      let fileBuffer = fs.readFileSync(soundPath);
+      var voiceChannel = message.member.voice.channel;
+
+      if (voiceChannel) {
+        var subscription = getOrCreateSubscription(message);
+
+        var connectionState = subscription.voiceConnection.state;
         if (
           !subscription.readyLock &&
           (connectionState.status === "connecting" ||
@@ -130,7 +64,7 @@ class VoiceCommand extends Command {
           }
         }
 
-        const track = await Track.fromFile(soundPath, {
+        const track = await Track.fromBuffer(fileBuffer, {
           onStart() {
             // message
             //   .reply({ content: "Now playing!", ephemeral: true })

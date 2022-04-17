@@ -23,6 +23,12 @@ class PlayCommand extends Command {
     // Extract the video URL from the command
     const url = args;
 
+    // turn youtube url using ytdl into audio stream
+    const stream = require("ytdl-core")(url, {
+      filter: "audioonly",
+      quality: "highestaudio",
+    });
+
     // If a connection to the guild doesn't already exist and the user is in a voice channel, join that channel
     // and create a subscription.
     if (!subscription) {

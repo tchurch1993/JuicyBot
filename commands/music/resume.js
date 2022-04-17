@@ -1,5 +1,4 @@
 const { Command } = require("@sapphire/framework");
-const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class ResumeCommand extends Command {
   constructor(bot) {
@@ -14,9 +13,21 @@ class ResumeCommand extends Command {
 
   async messageRun(message, args) {
     var subscription = global.subscriptions.get(message.guildId);
+
     if (subscription) {
-      subscription.audioPlayer.unpause();
-      await message.reply({ content: `Unpaused!`, ephemeral: true });
+      const status = subscription.audioPlayer.state.status;
+
+      if (status === "paused") {
+        subscription.audioPlayer.unpause();
+        await message.reply({ content: `Unpaused!`, ephemeral: true });
+      } else if (status === "idle") {
+        if (subscription.queue.length > 0) {
+          subscription.processQueue();
+          await message.reply({ content: `Unpaused!`, ephemeral: true });
+        }
+      } else {
+        await message.reply("Nothing to resume!");
+      }
     } else {
       await message.reply("Not playing in this server!");
     }

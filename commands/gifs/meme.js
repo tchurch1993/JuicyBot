@@ -1,7 +1,7 @@
 const { Command } = require("@sapphire/framework");
 const Gyfcat = require("gfycat-sdk");
 const config = require("../../config.json");
-const parsedArgs = require("../../helpers/parsers/extractargs");
+const extractArgs = require("../../helpers/parsers/extractargs");
 
 class MemeCommand extends Command {
   constructor(bot) {
@@ -15,16 +15,18 @@ class MemeCommand extends Command {
 
   //TODO: find better API for gifs/memes
   async messageRun(message, args) {
+    var parsedArgs = extractArgs(args);
+
     var gfycat = new Gyfcat(config.gfycat);
 
     gfycat.authenticate((err, data) => {
       let options = {
-        search_text: args,
+        search_text: parsedArgs,
         count: 5,
         first: 1,
       };
 
-      if (args === ("furry" || "furries")) {
+      if (parsedArgs === ("furry" || "furries")) {
         message.channel.send("get out of here with that gay shit");
         return;
       }
