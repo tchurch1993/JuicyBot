@@ -1,11 +1,8 @@
 // Load up the discord.js library
 const path = require("path");
-// const { CommandoClient, SQLiteProvider } = require("discord.js-commando");
 const { SapphireClient } = require("@sapphire/framework");
-// const sqlite = require("sqlite");
-// const sqlite3 = require("sqlite3");
 const tok = require("./helpers/commandless/tok");
-
+const GuildPrefix = require("./database/helpers/guildPrefix");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8080;
@@ -40,12 +37,6 @@ var event = db.once("open", function () {
 // some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
 // this is what we're refering to. Your client.
 const sapphireClient = new SapphireClient({
-  presence: {
-    activity: {
-      name: "to butts",
-      type: "LISTENING",
-    },
-  },
   defaultPrefix: _config.prefix,
   baseUserDirectory: __dirname,
   intents: [
@@ -68,6 +59,12 @@ const sapphireClient = new SapphireClient({
 
 sapphireClient.once("ready", () => {
   console.log("Sapphire is ready!");
+  sapphireClient.user.setActivity(
+    `${_config.prefix}help / @JuicyBot help | ${sapphireClient.guilds.cache.size} servers`,
+    {
+      type: "PLAYING",
+    }
+  );
 });
 
 // @ts-ignore
@@ -79,6 +76,11 @@ sapphireClient.on("guildCreate", (guild) => {
     `New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`
   );
 });
+
+sapphireClient.fetchPrefix = async (message) => {
+  var prefix = await GuildPrefix.GetPrefix(message.guild.id);
+  return prefix;
+};
 
 // @ts-ignore
 sapphireClient.on("guildDelete", (guild) => {
@@ -109,25 +111,7 @@ global.subscriptions = new Map();
 // @ts-ignore
 global.servers = {};
 
-// bot.on("message", async message => {
-//   // This event will run on every single message received, from any channel or DM.
-
-//   // It's good practice to ignore other bots. This also makes your bot ignore itself
-//   // and not get into a spam loop (we call that "botception").
-//   if(message.author.bot) return;
-
-//   // Also good practice to ignore any message that does not start with our prefix,
-//   // which is set in the configuration file.
-//   if(message.content.indexOf(config.prefix) !== 0) return;
-
-//   // Here we separate our "command" name, and our "arguments" for the command.
-//   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
-//   // command = say
-//   // args = ["Is", "this", "the", "real", "life?"]
-//   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-//   const command = args.shift().toLowerCase();
-//   });
 sapphireClient.login(_config.token);
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`Juicy app listening at http://localhost:${port}`);
 });
