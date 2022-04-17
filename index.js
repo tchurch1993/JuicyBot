@@ -1,5 +1,6 @@
 // Load up the discord.js library
 const path = require("path");
+
 // const { CommandoClient, SQLiteProvider } = require("discord.js-commando");
 const { SapphireClient } = require("@sapphire/framework");
 // const sqlite = require("sqlite");
@@ -15,11 +16,13 @@ app.get("/", (req, res) => {
   res.send("pong");
 });
 
+
 // Here we load the config.json file that contains our token and our prefix values.
 
 // config.token contains the bot's token
 // config.prefix contains the message prefix.
 const _config = require("./config.json");
+
 
 const mongoose = require("mongoose");
 
@@ -82,6 +85,7 @@ sapphireClient.on("guildCreate", (guild) => {
 
 // @ts-ignore
 sapphireClient.on("guildDelete", (guild) => {
+
   // this event triggers when the bot is removed from a guild.
   // TODO: Delete guild from DB
   // @ts-ignore
@@ -89,17 +93,21 @@ sapphireClient.on("guildDelete", (guild) => {
 });
 
 // @ts-ignore
+
 sapphireClient.on("disconnect", (event) => {
   console.log(event);
   sapphireClient.login(_config.token);
+
 });
 
 if (_config.tokEnabled) {
   // @ts-ignore
+
   sapphireClient.on("messageCreate", async (message) => {
     tok(message, sapphireClient);
   });
 }
+
 
 // @ts-ignore
 global.currentTeamMembers = [];
@@ -127,7 +135,9 @@ global.servers = {};
 //   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 //   const command = args.shift().toLowerCase();
 //   });
+
 sapphireClient.login(_config.token);
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
