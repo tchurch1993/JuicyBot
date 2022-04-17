@@ -16,6 +16,10 @@ class MemeCommand extends Command {
   //TODO: find better API for gifs/memes
   async messageRun(message, args) {
     var parsedArgs = extractArgs(args);
+    if (!parsedArgs) {
+      await message.reply("Please provide a search term!");
+      return;
+    }
 
     var gfycat = new Gyfcat(config.gfycat);
 
