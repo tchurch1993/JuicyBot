@@ -1,32 +1,34 @@
-const commando = require("discord.js-commando");
-const {
-  MessageAttachment
-} = require("discord.js");
+const { Command } = require("@sapphire/framework");
+const { MessageAttachment, Message } = require("discord.js");
 const fs = require("fs");
 const $ = require("cheerio");
 const puppeteer = require("puppeteer-extra");
 const request = require("request");
 const path = require("path");
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const TTDOWNLOADER_LINK = "https://ttdownloader.com/?url=";
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-class TokCommand extends commando.Command {
+class TokCommand extends Command {
   constructor(bot) {
     super(bot, {
       name: "tok",
       group: "video",
       memberName: "tok",
       description: "makes TikTok links viewable in discord :)",
+      typing: true,
     });
   }
 
-  async run(message, args) {
+  async messageRun(message, args, commandContext) {
+    //args = parsedArgs(args);
     if (!args.includes("tiktok")) {
       message.channel.send("yo, this aint no tok");
       return;
     }
+
     try {
       const date = new Date();
       const filename = date.getTime() + ".mp4";
@@ -35,7 +37,7 @@ class TokCommand extends commando.Command {
 
       puppeteer
         .launch({
-          headless: true
+          headless: true,
         })
         .then(function (browser) {
           return browser.pages();
@@ -43,13 +45,15 @@ class TokCommand extends commando.Command {
         .then(async function (pages) {
           try {
             var page = pages[0];
-            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36');
+            await page.setUserAgent(
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36"
+            );
             await page.goto(args);
 
             var html = await page.content();
             var pupObject = {
               html: html,
-              browser: page.browser()
+              browser: page.browser(),
             };
             page.close();
           } catch (error) {
@@ -60,8 +64,6 @@ class TokCommand extends commando.Command {
         })
         .then(async function (pupObject) {
           try {
-
-
             var html = pupObject.html;
             var videoElement = $.default("video", html);
 
@@ -72,26 +74,39 @@ class TokCommand extends commando.Command {
                 url: videoLink,
                 encoding: null,
                 headers: {
-                  referer: args
-                }
+                  referer: args,
+                },
               };
               request(requestOptions, (err, response, body) => {
-
                 console.log(response.statusCode);
+                // logging size of body buffer
+                console.log(body.byteLength);
 
                 if (err) {
-                  return
-                };
+                  return;
+                }
                 // checks to see if the body even contains a video buffer by checking its length
                 if (response.statusCode != 200) {
-                  return
-                };
+                  return;
+                }
 
-                const attachment = new MessageAttachment(body, filename);
+                if (body.byteLength > 8000000) {
+                  // create the FFmpeg instance and load it
+                  // const ffmpeg = require("fluent-ffmpeg");
+                  // ffmpeg.setFfmpegPath("C:\\ffmpeg\\bin\\ffmpeg.exe");
 
-                message.channel.send(attachment);
-              })
+                  //reduce size of video buffer
+                  var newBuffer = body.slice(0, 8000000);
+                  body = newBuffer;
 
+                  const attachment = new MessageAttachment(body, filename);
+                  message.channel.send({ files: [attachment] });
+                } else {
+                  const attachment = new MessageAttachment(body, filename);
+
+                  message.channel.send({ files: [attachment] });
+                }
+              });
             } else {
               console.log("could not find video link for: " + args);
             }

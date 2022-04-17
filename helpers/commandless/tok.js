@@ -1,28 +1,23 @@
-const config = require('../../config.json')
-const TokCommand = require('../../commands/video/tiktok_conversion')
+const config = require("../../config.json");
+const TokCommand = require("../../commands/video/tiktok_conversion");
 
-module.exports = function tok(message, bot){
+module.exports = function tok(message, bot) {
+  if (message.author.bot) return;
+  let args = message.content;
 
-    if(message.author.bot) return;
-    let args = message.content;
+  let url;
 
-    let url
+  try {
+    url = new URL(args);
+  } catch (_) {
+    return;
+  }
 
-    try {
-        url = new URL(args);
-    } catch (_) {
-        return;
-    }
-
-
-
-
-        if(args.includes("vm.tiktok.com") || args.includes("www.tiktok.com")){
-            let command = new TokCommand(bot)
-            command.run(message, message.content)
-        }
-
-}
+  if (args.includes("vm.tiktok.com") || args.includes("www.tiktok.com")) {
+    var tokCommand = bot.stores.get("commands").get("tok");
+    tokCommand.messageRun(message, message.content);
+  }
+};
 
 // function validURL(str) {
 //     let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
