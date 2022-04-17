@@ -1,8 +1,11 @@
-const commando = require("discord.js-commando");
+
+const { Command } = require("@sapphire/framework");
 const { MessageEmbed } = require("discord.js");
 const haloApi = require("../../helpers/halo/haloApi");
+const parsedArgs = require("../../helpers/parsers/extractargs");
 
-class HaloStatsCommand extends commando.Command {
+class HaloStatsCommand extends Command {
+
   constructor(bot) {
     super(bot, {
       name: "halostats",
@@ -12,8 +15,10 @@ class HaloStatsCommand extends commando.Command {
     });
   }
 
-  //TODO: delete from bot but keep as a template for future commands
-  async run(message, args) {
+
+  async messageRun(message, args) {
+    args = parsedArgs(args);
+
     try {
       let api = new haloApi(
         "Am8JUOH0QfBIt9FQWwAxFxWnzfNRcZcBzr6T13lUQkQZZqx2ipbCjFSUkqN8l4JF",
@@ -39,44 +44,51 @@ function createPlayerStatsEmbed(response) {
   let additional = response.additional;
   let playerInfo = response.playerinfo;
   let embed = new MessageEmbed();
-  embed
-    .setTitle(additional.gamertag + "'s Halo Stats")
-    .setColor(0x00ae86)
-    .setThumbnail(playerInfo.backdrop_image_url)
-    .setImage(playerInfo.emblem_url)
-    .addField("Kills", data.summary.kills, true)
-    .addField("Deaths", data.summary.deaths, true)
-    .addField("Assists", data.summary.assists, true)
-    .addField("Betrayals", data.summary.betrayals, true)
-    .addField("Suicides", data.summary.suicides, true)
-    .addField("Vehicles Destryoed", data.summary.vehicles.destroys, true)
-    .addField("Vehicles hijacked", data.summary.vehicles.hijacks, true)
-    .addField("Medals", data.summary.medals, true)
-    .addField("Damage Taken", data.damage.taken, true)
-    .addField("Damage Dealt", data.damage.dealt, true)
-    .addField("Average Damage per match", data.damage.average, true)
-    .addField("Shots Fired", data.shots.fired, true)
-    .addField("Shots Landed", data.shots.landed, true)
-    .addField("Shots Missed", data.shots.missed, true)
-    .addField(
-      "Total Accuracy",
-      Math.round((data.shots.accuracy + Number.EPSILON) * 100) / 100 + "%",
-      true
-    )
-    .addField("Melee Kills", data.breakdowns.kills.melee, true)
-    .addField("Grenade Kills", data.breakdowns.kills.grenades, true)
-    .addField("Headshot kills", data.breakdowns.kills.headshots, true)
-    .addField("Power Weapon Kills", data.breakdowns.kills.power_weapons, true)
-    .addField("Total Wins", data.breakdowns.matches.wins, true)
-    .addField("Total Losses", data.breakdowns.matches.losses, true)
-    .addField("Total Matches Left", data.breakdowns.matches.left, true)
-    .addField(
-      "KDA (Kill/Death/Assist)",
-      Math.round((data.kda + Number.EPSILON) * 100) / 100,
-      true
-    )
-    .addField("KDR", Math.round((data.kdr + Number.EPSILON) * 100) / 100, true)
-    .setTimestamp();
+
+  embed.setTitle(additional.gamertag + "'s Halo Stats");
+  embed.setColor(0x00ae86);
+  embed.setThumbnail(playerInfo.backdrop_image_url);
+  embed.setImage(playerInfo.emblem_url);
+  embed.addField("Kills", data.summary.kills, true);
+  embed.addField("Assists", data.summary.assists, true);
+  embed.addField("Betrayals", data.summary.betrayals, true);
+  embed.addField("Suicides", data.summary.suicides, true);
+  embed.addField("Vehicles Destryoed", data.summary.vehicles.destroys, true);
+  embed.addField("Vehicles hijacked", data.summary.vehicles.hijacks, true);
+  embed.addField("Medals", data.summary.medals, true);
+  embed.addField("Damage Taken", data.damage.taken, true);
+  embed.addField("Damage Dealt", data.damage.dealt, true);
+  embed.addField("Average Damage per match", data.damage.average, true);
+  embed.addField("Shots Fired", data.shots.fired, true);
+  embed.addField("Shots Landed", data.shots.landed, true);
+  embed.addField("Shots Missed", data.shots.missed, true);
+  embed.addField(
+    "Total Accuracy",
+    Math.round((data.shots.accuracy + Number.EPSILON) * 100) / 100 + "%",
+    true
+  );
+  embed.addField("Melee Kills", data.breakdowns.kills.melee, true);
+  embed.addField("Grenade Kills", data.breakdowns.kills.grenades, true);
+  embed.addField("Headshot kills", data.breakdowns.kills.headshots, true);
+  embed.addField(
+    "Power Weapon Kills",
+    data.breakdowns.kills.power_weapons,
+    true
+  );
+  embed.addField("Total Wins", data.breakdowns.matches.wins, true);
+  embed.addField("Total Losses", data.breakdowns.matches.losses, true);
+  embed.addField("Total Matches Left", data.breakdowns.matches.left, true);
+  embed.addField(
+    "KDA (Kill/Death/Assist)",
+    Math.round((data.kda + Number.EPSILON) * 100) / 100,
+    true
+  );
+  embed.addField(
+    "KDR",
+    Math.round((data.kdr + Number.EPSILON) * 100) / 100,
+    true
+  );
+
 
   return embed;
 }
