@@ -10,6 +10,7 @@ class VolumeCommand extends Command {
       memberName: "volume",
       description: "changes the volume from 1-100",
       ownerOnly: true,
+      enabled: false,
     });
   }
 

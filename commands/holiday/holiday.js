@@ -15,6 +15,7 @@ class HolidayCommand extends Command {
       group: "holiday",
       memberName: "holiday",
       description: "displays what holiday is on that day",
+      enabled: false,
     });
   }
 

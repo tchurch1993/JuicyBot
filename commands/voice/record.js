@@ -17,6 +17,7 @@ class RecordCommand extends Command {
       memberName: "record",
       description: "Records your voice!",
       guildOnly: true,
+      enabled: false,
     });
   }
 
