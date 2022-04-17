@@ -1,9 +1,11 @@
+
 const { Command } = require("@sapphire/framework");
 const { MessageEmbed } = require("discord.js");
 const haloApi = require("../../helpers/halo/haloApi");
 const parsedArgs = require("../../helpers/parsers/extractargs");
 
 class HaloStatsCommand extends Command {
+
   constructor(bot) {
     super(bot, {
       name: "halostats",
@@ -13,8 +15,10 @@ class HaloStatsCommand extends Command {
     });
   }
 
+
   async messageRun(message, args) {
     args = parsedArgs(args);
+
     try {
       let api = new haloApi(
         "Am8JUOH0QfBIt9FQWwAxFxWnzfNRcZcBzr6T13lUQkQZZqx2ipbCjFSUkqN8l4JF",
@@ -40,6 +44,7 @@ function createPlayerStatsEmbed(response) {
   let additional = response.additional;
   let playerInfo = response.playerinfo;
   let embed = new MessageEmbed();
+
   embed.setTitle(additional.gamertag + "'s Halo Stats");
   embed.setColor(0x00ae86);
   embed.setThumbnail(playerInfo.backdrop_image_url);
@@ -83,6 +88,7 @@ function createPlayerStatsEmbed(response) {
     Math.round((data.kdr + Number.EPSILON) * 100) / 100,
     true
   );
+
 
   return embed;
 }

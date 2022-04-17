@@ -1,5 +1,6 @@
 // Load up the discord.js library
 const path = require("path");
+
 const { SapphireClient } = require("@sapphire/framework");
 const tok = require("./helpers/commandless/tok");
 const GuildPrefix = require("./database/helpers/guildPrefix");
@@ -91,6 +92,7 @@ sapphireClient.on("guildDelete", (guild) => {
 });
 
 // @ts-ignore
+
 sapphireClient.on("disconnect", (event) => {
   console.log(event);
   sapphireClient.login(_config.token);
@@ -98,6 +100,7 @@ sapphireClient.on("disconnect", (event) => {
 
 if (_config.tokEnabled) {
   // @ts-ignore
+
   sapphireClient.on("messageCreate", async (message) => {
     tok(message, sapphireClient);
   });
@@ -112,6 +115,7 @@ global.subscriptions = new Map();
 global.servers = {};
 
 sapphireClient.login(_config.token);
+
 app.listen(port, () => {
   console.log(`Juicy app listening at http://localhost:${port}`);
 });
