@@ -22,7 +22,7 @@
     "bufferutil": "^4.0.2",
     "cheerio": "^1.0.0-rc.5",
     "discord.js": "^13.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "ffmpeg-static": "^3.0.0",
     "gfycat-sdk": "^1.4.18",
     "mongoose": "^5.11.8",
